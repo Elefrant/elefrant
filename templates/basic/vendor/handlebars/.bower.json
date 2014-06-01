@@ -1,0 +1,15 @@
+{
+  "name": "handlebars",
+  "main": "handlebars.js",
+  "dependencies": {},
+  "homepage": "https://github.com/components/handlebars.js",
+  "_release": "c8bb363564",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "c8bb363564d699b162089a3f9666f4a8635841a7"
+  },
+  "_source": "git://github.com/components/handlebars.js.git",
+  "_target": "master",
+  "_originalSource": "handlebars"
+}

@@ -1,0 +1,11 @@
+{
+    "name": "elefrant",
+    "version": "0.1.0",
+    "dependencies": {
+        "lodash": "latest",
+        "google-code-prettify": "latest",
+        "handlebars": "master",
+        "google-diff-match-patch-js": "latest",
+        "bootstrap": "3.1.1"
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "name": "elefrant",
+    "version": "0.1.0",
+    "elefrant": "0.1.0",
+    "description": "Elefrant: A javascript platform to create apis power by MongoDB, Restify, NodeJS",
+    "apidocFilename": "apidoc.md",
+    "private": false,
+    "author": "Marcos Sanz <marcos.sanz@13genius.com>",
+    "main": "api.js",
+    "homepage": "http://www.elefrant.com",
+    "bugs": {
+        "url": "http://git.13genius.com/meetkat/api/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "http://git.13genius.com/meetkat/api.git"
+    },
+    "engines": {
+        "node": "0.10.x",
+        "npm": "1.3.x"
+    },
+    "keywords": [
+        "Nodejs",
+        "api",
+        "Restify",
+        "Elefrant"
+    ],
+    "scripts": {
+        "start": "node node_modules/grunt-cli/bin/grunt",
+        "test": "node node_modules/grunt-cli/bin/grunt test",
+        "postinstall": "node node_modules/bower/bin/bower install"
+    },
+    "dependencies": {
+        "bunyan": "^0.22.3",
+        "lodash": "^2.4.1",
+        "grunt-cli": "^0.1.13",
+        "restify": "~2.7.0",
+        "restify-oauth2": "~4.0.0",
+        "validator": "^3.12.0",
+        "mongoose": ">= 2.3.1",
+        "mongoose-validator": "~0.2.2",
+        "bcrypt-nodejs": "~0.0.3",
+        "redis": "0.8.x",
+        "node-uuid": "~1.4.1",
+        "bull": "0.1.x",
+        "bower": "~1.2.8",
+
+
+        "apidoc": "~0.4.0",
+        "grunt-contrib-clean": "^0.5.0",
+        "grunt-concurrent": "^0.5.0",
+        "grunt-contrib-uglify": "^0.4.0",
+        "grunt-contrib-watch": "^0.6.1",
+        "grunt-apidoc": "~0.4.0",
+        "grunt-env": "^0.4.1",
+        "grunt-forever": "^0.4.0",
+        "grunt-nodemon": "0.2.1",
+        "load-grunt-tasks": "^0.4.0",
+        "time-grunt": "^0.3.1",
+        "colors": "^0.6.2",
+        "dateformat": "^1.0.7"
+    },
+    "devDependencies": {
+        "should": "^3.3.1",
+        "mocha": "^1.19.0",
+        "grunt": "~0.4.2",
+        "grunt-contrib-jshint": "^0.10.0",
+        "grunt-contrib-csslint": "^0.2.0",
+        "grunt-mocha-test": "^0.10.2",
+        "grunt-notify": "^0.3.0",
+        "grunt-docco": "^0.3.3"
+
+    },
+    "license": "MIT",
+    "readmeFilename": "README.md"
+}
