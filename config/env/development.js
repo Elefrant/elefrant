@@ -4,23 +4,105 @@
  * Environment configuration properties
  */
 module.exports = {
-    // Main server
+    /*
+     * Server
+     * --------------------------
+     */
     server: {
+        /*
+         * Name
+         * --------------------------
+         * Name of your API
+         */
         name: require('../../package.json').name,
+
+        /*
+         * Version
+         * --------------------------
+         * Current version of your API
+         */
         version: require('../../package.json').version,
+
+        /*
+         * Host
+         * --------------------------
+         * Host of the main node server (You can chaange via CLI)
+         */
         host: 'localhost',
+
+        /*
+         * Port
+         * --------------------------
+         * Port of mainnode server (You can chaange via CLI
+         */
         port: '3100'
     },
+
+    /*
+     * Mongodb
+     * --------------------------
+     */
     mongodb: {
+        /*
+         * Host
+         * --------------------------
+         * Host of database
+         */
         host: 'localhost',
+
+        /*
+         * Port
+         * --------------------------
+         * Port of database
+         */
         port: '27017',
+
+        /*
+         * Database
+         * --------------------------
+         * Name of database
+         */
         database: 'dnapijs-dev'
     },
+
+    /*
+     * Redis
+     * --------------------------
+     */
     redis: {
+        /*
+         * Host
+         * --------------------------
+         * Host of database
+         */
         host: 'localhost',
+
+        /*
+         * Port
+         * --------------------------
+         * Port of database
+         */
         port: '6379',
+
+        /*
+         * Options
+         * --------------------------
+         * Options for redis
+         */
         options: null,
+
+        /*
+         * Password
+         * --------------------------
+         * Auth password to connect to redis
+         */
         password: null,
+
+        /*
+         * Database
+         * --------------------------
+         * Number of database
+         */
         database: null
     },
 
@@ -36,6 +118,12 @@ module.exports = {
             sendEmail: false,
             browserPreview: true
         },*/
+
+    /*
+     * Debug Mode
+     * --------------------------
+     * Set if you want to see debugger options
+     */
     debug: true,
 
     logger: {

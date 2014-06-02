@@ -15,9 +15,10 @@ describe('<Unit Test>', function () {
     describe('Model Client:', function () {
         before(function (done) {
             client = new Client({
-                client: 'testApiClient',
+                name: 'testApiClient',
                 secret: 'C0FFEE'
             });
+
             client2 = new Client(client);
 
             done();
@@ -46,8 +47,23 @@ describe('<Unit Test>', function () {
             });
 
             it('should show an error when try to save without client name', function (done) {
-                client.client = '';
+                client.name = '';
                 return client.save(function (err) {
+                    should.exist(err);
+                    done();
+                });
+            });
+
+            it('should be able to save with scopes', function (done) {
+                client.name = 'testApiClient';
+                client.scopes = ['read', 'write'];
+                client.save(done);
+            });
+
+            it('should fail to save a not existing scopes', function (done) {
+                client.name = 'testApiClient';
+                client.scopes = ['read_messages', 'write'];
+                client.save(function (err) {
                     should.exist(err);
                     done();
                 });

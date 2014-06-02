@@ -33,6 +33,7 @@ module.exports = function (api, config) {
             version: [
                 '1.0.0'
             ],
+            //auth: true,
             action: api.v1.authController.secret
         }
     ];

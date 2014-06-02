@@ -52,6 +52,21 @@ describe('<Unit Test>', function () {
                     done();
                 });
             });
+
+            it('should be able to save with scopes', function (done) {
+                token.customer = 'testuser';
+                token.scopes = ['read', 'write'];
+                token.save(done);
+            });
+
+            it('should fail to save a not existing scopes', function (done) {
+                token.customer = 'testuser';
+                token.scopes = ['read_messages', 'write'];
+                token.save(function (err) {
+                    should.exist(err);
+                    done();
+                });
+            });
         });
 
         after(function (done) {

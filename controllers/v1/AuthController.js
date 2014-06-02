@@ -126,31 +126,9 @@ module.exports = {
      * @return Literal
      */
     initial: function (req, res, next) {
-        var response = {
-            _links: {
-                self: {
-                    href: '/'
-                },
-                'http://localhost:3100/public': {
-                    href: '/status'
-                }
-            }
-        };
+        var result = require('../../lib/utils').arrayInArray(['1', '2', '3', '4', '5'], ['1', '5']);
 
-        if (req.user) {
-            response._links['http://localhost:3100/secret'] = {
-                href: '/secret'
-            };
-        } else {
-            response._links['oauth2-token'] = {
-                href: '/oauth2/token',
-                'grant-types': 'client_credentials',
-                'token-types': 'bearer'
-            };
-        }
-
-        //res.contentType = 'application/hal+json';
-        res.send(response);
+        res.send(result);
     },
 
     secret: function (req, res, next) {

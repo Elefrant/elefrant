@@ -3,12 +3,12 @@
 /**
  * Module dependencies.
  */
-var _ = require('../lib/utils'),
-    authentication = require('../middleware/authentication');
+var _ = require('../lib/utils');
 
 module.exports = function (server, config) {
     // Load controllers
-    var api = require('./Controller')(config);
+    var api = require('./Controller')(config),
+        authentication = require('../middleware/authentication')(config.oauth.allowScope);
 
     // Paths
     var routes_path = config.root + '/config/routes',
@@ -36,8 +36,8 @@ module.exports = function (server, config) {
 
         // Check if methods is in the list
         if (['get', 'post', 'put', 'del', 'patch'].indexOf(method) > -1) {
-            // Check if is an authorization route
-            if (route.auth) {
+            // Check if is an authorization route and is enable
+            if (config.oauth.enable && route.auth) {
                 // Create rout
                 server[method]({
                     name: route.name,

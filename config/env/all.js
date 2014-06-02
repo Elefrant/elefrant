@@ -29,10 +29,10 @@ module.exports = {
          * --------------------------
          * Select one of the next flows.
          *
-         * - [cc]: Client Credentials
-         * - [ropc]: Resource Owner Password Credentials
+         * - [cc]: Client Credentials (Client App <-> Server)
+         * - [ropc]: Resource Owner Password Credentials (Client App <-> User <-> Server)
          */
-        oauthFlow: 'cc',
+        oauthFlow: 'ropc',
 
         /*
          * Token Expiration Time
@@ -40,16 +40,24 @@ module.exports = {
          * Select one of the next flows.
          *
          * - [Infinity]: Not expire the token
-         * - [numer]: Number of seconds
+         * - [numer]: Number of seconds. For example 20 min (20 * 60)
          */
-        tokenExpirationTime: Infinity,
+        tokenExpirationTime: 'Infinity',
 
         /*
          * WWW Auth Realm
          * --------------------------
          * The value of the "Realm" challenge in the WWW-Authenticate header
          */
-        wwwAuthenticateRealm: 'Who goes there?'
+        wwwAuthenticateRealm: 'Who goes there?',
+
+        /*
+         * Allow Scopes
+         * --------------------------
+         * Allow to use scope permission for clients
+         * Find in config/clientScopes.js
+         */
+        allowScopes: true
     },
 
     /*

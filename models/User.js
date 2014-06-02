@@ -43,6 +43,14 @@ var UserSchema = new Schema({
         required: true,
         enum: ['user', 'developer', 'admin'],
         default: 'user'
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
+    updated_at: {
+        type: Date,
+        default: Date.now
     }
 });
 
@@ -87,6 +95,10 @@ UserSchema.pre('save', function (next) {
     if (!util.validatePresenceOf(this.password)) {
         next(new restify.MissingParameterError('Invalid password'));
     }
+
+    // Update updated time
+    this.updated_at = new Date();
+
     next();
 });
 
@@ -98,32 +110,13 @@ UserSchema.methods = {
 
     /**
      * Authenticate - check if the passwords are the same
-     *
-     * @param {String} plainText
-     * @return {Boolean}
-     * @api public
      */
     authenticate: function (plainText) {
         return util.encryptCompare(plainText, this.hashed_password);
     },
 
     /**
-     * Encrypt password
-     *
-     * @param {String} password
-     * @return {String}
-     * @api public
-     */
-    encryptPassword: function (password) {
-        return util.encryptPassword(password);
-    },
-
-    /**
      * allowAccess
-     *
-     * @param {String} role
-     * @return {Boolean}
-     * @api public
      */
     allowAccess: function (role) {
         if (this.role === 'Admin') return true; // Admin can access everything
@@ -131,6 +124,21 @@ UserSchema.methods = {
         if (role === 'User' && (this.role === 'User' || this.role === 'Developer')) return true; // user is at the bottom of special access
         return false; // should only happen if checking access for an anonymous user
     }
+};
+
+/**
+ * Statics
+ */
+
+UserSchema.statics = {
+
+    /**
+     * Encrypt password
+     */
+    encryptPassword: function (password) {
+        return util.encryptPassword(password);
+    }
+
 };
 
 mongoose.model('User', UserSchema);

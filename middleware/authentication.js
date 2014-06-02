@@ -1,10 +1,24 @@
 'use strict';
 
-// Export module
-module.exports = function (req, res, next) {
-    if (!req.customer) {
-        return res.sendUnauthorized();
-    }
+/**
+ * Module dependencies.
+ */
 
-    return next();
+//var scopes = require('../config/clientScopes');
+
+// Export module
+module.exports = function (allowScope) {
+    // Return check auth function
+    return function (req, res, next) {
+        console.log(req.customer);
+        if (!req.customer) {
+            return res.sendUnauthorized();
+        }
+
+        /*if (allowScope && req.scopesGranted.indexOf('two') === -1) {
+            return res.sendUnauthorized();
+        }*/
+
+        return next();
+    };
 };
