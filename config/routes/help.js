@@ -8,7 +8,11 @@
         '1.0.0',
         '2.0.1'
     ],
-    auth: true or false,
+    auth: true or false, // Optional
+    scopes: [ // Optional
+        'read',
+        'write'
+    ],
     action: api.v1.nameController.method
 },*/
 

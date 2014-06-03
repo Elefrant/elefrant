@@ -14,8 +14,8 @@ module.exports = function (config) {
     // Connect to redis
     var redisClient = require('./Redis.js')(config.redis.port, config.redis.host, config.redis.options, config.redis.password, config.redis.database);
 
-    // Check if expire time
-    var isExpireTime = config.oauth.tokenExpirationTime !== 'Infinity';
+    // Check if exists expire time
+    var isExpireTime = config.oauth.tokenExpirationTime && config.oauth.tokenExpirationTime > 0;
 
     // Functions and hooks
     return {
@@ -65,9 +65,12 @@ module.exports = function (config) {
                         } else if (!oldToken) {
                             // Save new token if not found
                             var newToken = new Token({
-                                customer: user.username,
-                                token: Token.generateToken(user.username + ':' + uuid.v4())
+                                customer: user.username
                             });
+                            newToken.token = newToken.generateToken(user.username + ':' + uuid.v4());
+                            if (isExpireTime) {
+                                newToken.ttl = config.oauth.tokenExpirationTime;
+                            }
 
                             // Save newToken
                             newToken.save(function (err, token) {
@@ -90,7 +93,10 @@ module.exports = function (config) {
                         } else {
                             // Update if found
                             var oldTokenAux = oldToken.token;
-                            oldToken.token = Token.generateToken(user.username + ':' + uuid.v4());
+                            oldToken.token = oldToken.generateToken(user.username + ':' + uuid.v4());
+                            if (isExpireTime) {
+                                oldToken.ttl = config.oauth.tokenExpirationTime;
+                            }
                             oldToken.save(function (err, token) {
                                 if (err) {
                                     // Send error
@@ -152,7 +158,7 @@ module.exports = function (config) {
                             // If the token authenticates, call back with the corresponding customer.
                             // Restify-OAuth2 will put it in the
                             // request's `customer` property.
-                            req.customer = authToken.customer;
+                            req.username = authToken.customer;
 
                             // Get scopes for that token
                             if (config.oauth.allowScopes) {
@@ -165,7 +171,7 @@ module.exports = function (config) {
                 } else {
                     // Return the customer
                     reply = JSON.parse(reply);
-                    req.customer = reply.customer;
+                    req.username = reply.customer;
 
                     // Get scopes for that token
                     if (config.oauth.allowScopes) {
@@ -205,9 +211,12 @@ module.exports = function (config) {
                         } else if (!oldToken) {
                             // Save new token if not found
                             var newToken = new Token({
-                                customer: client._id,
-                                token: Token.generateToken(client._id + ':' + uuid.v4())
+                                customer: client._id
                             });
+                            newToken.token = newToken.generateToken(client._id + ':' + uuid.v4());
+                            if (isExpireTime) {
+                                newToken.ttl = config.oauth.tokenExpirationTime;
+                            }
 
                             // Save newToken
                             newToken.save(function (err, token) {
@@ -230,7 +239,10 @@ module.exports = function (config) {
                         } else {
                             // Update if found
                             var oldTokenAux = oldToken.token;
-                            oldToken.token = Token.generateToken(client._id + ':' + uuid.v4());
+                            oldToken.token = oldToken.generateToken(client._id + ':' + uuid.v4());
+                            if (isExpireTime) {
+                                oldToken.ttl = config.oauth.tokenExpirationTime;
+                            }
                             oldToken.save(function (err, token) {
                                 if (err) {
                                     // Send error

@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "lodash": "latest",
-        "handlebars": "master",
+        "handlebars": "latest",
         "google-diff-match-patch-js": "latest",
         "bootstrap": "3.1.1"
     }

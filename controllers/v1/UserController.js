@@ -98,7 +98,9 @@ module.exports = {
      * @apiErrorStructure InvalidArgument
      */
     add: function (req, res, next) {
-        // Get params from body
+        res.send(req.customer);
+
+        /*// Get params from body
         req.checkBody('name', 'Name must be valid.').notEmpty();
         req.checkBody('email', 'Email must be valid.').notEmpty().isEmail();
         req.checkBody('username', 'Username must be more than 5 chars.').notEmpty().len(5);
@@ -106,11 +108,11 @@ module.exports = {
         req.checkBody('vPassword', 'Password and Verify Password must match.').notEmpty().equals(req.body.password);
 
         // Only for admin
-        var roleUser = 'user',
+        var rolesUser = ['user'],
             isAdmin = true;
-        if (req.body.role && isAdmin) {
+        if (req.body.roles && isAdmin) {
             req.checkBody('role', 'Role has to be <user>, <developer>, <admin>').isIn(['user', 'developer', 'admin']);
-            roleUser = req.body.role;
+            rolesUser = req.body.roles;
         }
 
         // Show errors if exists
@@ -125,11 +127,12 @@ module.exports = {
             email: req.body.email,
             username: req.body.username,
             password: req.body.password,
-            role: roleUser
+            roles: rolesUser
         });
 
         // Save user
         user.save(function (err, user) {
+            console.log(err);
             if (err) {
                 // Send error
                 return next(err);
@@ -140,13 +143,13 @@ module.exports = {
                     name: user.name,
                     email: user.email,
                     username: user.username,
-                    role: user.role
+                    roles: user.role
                 };
 
                 // Send result
                 res.send(user);
             }
-        });
+        });*/
     },
 
     //-----------------------------------------------------------------------------------

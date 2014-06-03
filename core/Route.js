@@ -8,7 +8,7 @@ var _ = require('../lib/utils');
 module.exports = function (server, config) {
     // Load controllers
     var api = require('./Controller')(config),
-        authentication = require('../middleware/authentication')(config.oauth.allowScope);
+        authentication = require('./middleware/authentication')(config.oauth.allowScope);
 
     // Paths
     var routes_path = config.root + '/config/routes',

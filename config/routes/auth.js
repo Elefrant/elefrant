@@ -8,7 +8,11 @@
         '1.0.0',
         '2.0.1'
     ],
-    auth: true or false,
+    auth: true or false, // Optional
+    scopes: [ // Optional
+        'read',
+        'write'
+    ],
     action: api.v1.nameController.method
 },*/
 
@@ -33,7 +37,10 @@ module.exports = function (api, config) {
             version: [
                 '1.0.0'
             ],
-            //auth: true,
+            auth: true,
+            scopes: [
+                'read'
+            ],
             action: api.v1.authController.secret
         }
     ];

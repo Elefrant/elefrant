@@ -39,10 +39,10 @@ module.exports = {
          * --------------------------
          * Select one of the next flows.
          *
-         * - [Infinity]: Not expire the token
-         * - [numer]: Number of seconds. For example 20 min (20 * 60)
+         * - [false]: Not expire the token
+         * - [numer]: Number of seconds. For example 20 min (20 * 60). [0]: Unlimited
          */
-        tokenExpirationTime: 'Infinity',
+        tokenExpirationTime: false,
 
         /*
          * WWW Auth Realm

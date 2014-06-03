@@ -132,8 +132,6 @@ module.exports = {
     },
 
     secret: function (req, res, next) {
-        console.log(req.customer);
-
 
         var response = {
             'clients with a token': 'have access to this secret data: ' + req.customer,

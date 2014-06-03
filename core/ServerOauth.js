@@ -11,7 +11,7 @@ module.exports = function (config, server) {
     oauthServer[config.oauth.oauthFlow](server, {
         tokenEndpoint: 'oauth2/token',
         wwwAuthenticateRealm: config.oauth.wwwAuthenticateRealm,
-        tokenExpirationTime: config.oauth.tokenExpirationTime,
+        tokenExpirationTime: config.oauth.tokenExpirationTime || undefined,
         hooks: require('./Authentication')(config)
     });
 

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var restify = require('restify'), // Load server
-    restifyValidator = require('../middleware/validator'), // Load validator
+    restifyValidator = require('./middleware/validator'), // Load validator
     logger = require('bunyan'), // Load Logger system
     fs = require('fs'); // Load  filesystem
 
@@ -96,19 +96,10 @@ module.exports = function (config) {
         return next();
     });
 
-    //  TODO: sistema throller unido a autentificacion
-    /*server.use(restify.throttle({
-        burst: 100,
-        rate: 50,
-        ip: true,
-        overrides: {
-            '192.168.1.1': {
-                rate: 0, // unlimited
-                burst: 0
-            }
-        }
-    }));
-*/
+    // Allow rate limit for the server
+    if (config.throttle.enable) {
+        require('./Throttle')(server, restify, config);
+    }
 
     //Add validator middleware to server
     server.use(restifyValidator);

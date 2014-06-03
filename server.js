@@ -18,6 +18,8 @@ var mongoose = require('mongoose'),
 
 // Initializing system variables
 var config = require('./core/Config')(env);
+console.log('Loading configuration'.underline);
+console.log('- Enviroment: %s'.grey, env);
 
 // Update port and host
 config.server.port = process.env.PORT || config.server.port;

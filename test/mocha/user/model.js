@@ -19,7 +19,7 @@ describe('<Unit Test>', function () {
                 email: 'test@test.com',
                 username: 'testuser',
                 password: 'password',
-                role: 'Admin'
+                role: 'admin'
             });
             user2 = new User(user);
 
@@ -50,6 +50,15 @@ describe('<Unit Test>', function () {
 
             it('should show an error when try to save without name', function (done) {
                 user.name = '';
+                return user.save(function (err) {
+                    should.exist(err);
+                    done();
+                });
+            });
+
+            it('should show an error when try to save an invalid email', function (done) {
+                user.name = 'Test User';
+                user.email = 'testtest.com';
                 return user.save(function (err) {
                     should.exist(err);
                     done();

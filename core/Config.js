@@ -16,17 +16,15 @@ module.exports = function (env) {
 
     // Check if file exists
     if (fs.existsSync(config_path + '/' + env)) {
-        console.log('Loading configuration'.underline);
-        console.log('- Enviroment: %s'.grey, env);
         env_config = require(config_path + '/' + env);
     } else {
-        console.log('Loading configuration'.underline);
-        console.log('- Enviroment: development'.grey);
         env_config = require(config_path + '/development');
     }
 
     // Extend the base configuration in all.js with environment
-    return _.extend(
+    return _.extend({
+            env: env
+        },
         require(config_path + '/all'),
         env_config
     );

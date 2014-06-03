@@ -5,13 +5,10 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    restify = require('restify'),
     util = require('../lib/utils'),
     scopes = require('../config/clientScopes');
 
-/*
- * Client Key Schema
- */
+// Token Key Schema
 var TokenSchema = new Schema({
     customer: {
         type: String,
@@ -29,72 +26,81 @@ var TokenSchema = new Schema({
         type: [String],
         trim: true
     },
+    ttl: {
+        type: Number,
+        trim: true
+    },
     created_at: {
         type: Date,
-        trim: true,
-        default: Date.now
+        trim: true
     },
     updated_at: {
         type: Date,
-        trim: true,
-        default: Date.now
+        trim: true
     }
 });
 
-/**
- * Pre-save hook
- */
+// Index schema
+TokenSchema.index({
+    customer: 1,
+    token: 1
+});
+TokenSchema.index({
+    token: 1
+});
+
+// Validation
+TokenSchema.path('customer').validate(function (customer) {
+    return util.validatePresenceOf(customer);
+}, 'Customer cannot be blank');
+
+TokenSchema.path('token').validate(function (token) {
+    return util.validatePresenceOf(token);
+}, 'Token cannot be blank');
+
+TokenSchema.path('scopes').validate(function (scope) {
+    if (util.validatePresenceOf(scope)) {
+        return util.arrayInArray(scopes, scope);
+    }
+    return true;
+}, 'Scopes have to be in: (' + scopes.join() + ')');
+
+// Pre-save hook
 TokenSchema.pre('save', function (next) {
-    if (!util.validatePresenceOf(this.customer)) {
-        next(new restify.MissingParameterError('Customer cannot be blank'));
-    }
-    if (util.validatePresenceOf(this.scopes)) {
-        if (!util.arrayInArray(scopes, this.scopes)) {
-            next(new restify.MissingParameterError('Scopes have to be in: (' + scopes.join() + ')'));
-        }
-    }
-
-    // token not blank when creating, otherwise skip
-    if (!this.isNew) return next();
-    if (!util.validatePresenceOf(this.token)) {
-        next(new restify.MissingParameterError('Invalid token'));
-    }
-
     // Update updated time
-    this.updated_at = new Date();
+    var now = new Date();
+    this.updated_at = now;
+
+    // Execute when is new
+    if (!this.isNew) return next();
+
+    // Create at date
+    if (!this.created_at) {
+        this.created_at = now;
+    }
 
     next();
 });
 
-/**
- * Methods
- */
-
+// Methods
 TokenSchema.methods = {
 
-    /**
-     * Authenticate - check if the token is correct
-     */
+    // Authenticate the password. Check if the passwords are the same
     authenticate: function (token) {
         return token === this.token;
-    }
+    },
 
-};
-
-/**
- * Statics
- */
-
-TokenSchema.statics = {
-
-    /**
-     * Generate Token
-     */
+    // Generate a token from a string
     generateToken: function (data) {
         return util.generateToken(data);
     }
 
 };
 
+// Statics
+TokenSchema.statics = {
 
+};
+
+// Create Model
 mongoose.model('Token', TokenSchema);

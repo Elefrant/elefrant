@@ -6,13 +6,12 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     restify = require('restify'),
-    util = require('../lib/utils');
+    util = require('../lib/utils')
+    /*,
+    validate = require('mongoose-validator').validate*/
+;
 
-//var validate = require('mongoose-validator').validate;
-
-/**
- * User Schema
- */
+//User Schema
 var UserSchema = new Schema({
     name: {
         type: String,
@@ -23,7 +22,8 @@ var UserSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true
+        unique: true,
+        match: [/.+\@.+\..+/, 'Email address must be valid']
     },
     username: {
         type: String,
@@ -37,108 +37,123 @@ var UserSchema = new Schema({
         required: true,
         trim: true
     },
-    role: {
+    salt: {
         type: String,
+        required: true,
+        trim: true
+    },
+    roles: {
+        type: Array,
         trim: true,
         required: true,
         enum: ['user', 'developer', 'admin'],
-        default: 'user'
+        default: ['user']
     },
     created_at: {
         type: Date,
-        default: Date.now
+        trim: true
     },
     updated_at: {
         type: Date,
-        default: Date.now
+        trim: true
     }
 });
 
+// Index schema
+UserSchema.index({
+    username: 1,
+    email: 1
+});
+UserSchema.index({
+    email: 1
+});
 
-/**
- * Virtuals
- */
+// Virtuals
 UserSchema
     .virtual('password')
     .set(function (password) {
         this._password = password;
+        this.salt = this.makeSalt();
         this.hashed_password = this.encryptPassword(password);
     })
     .get(function () {
         return this._password;
     });
 
-// tried these formats, always get the generic message
-//UserSchema.path('name').validate(function (name) {
-//  return util.validatePresenceOf(name)
-//}, 'Name cannot be blank')
+// Validation
+UserSchema.path('name').validate(function (name) {
+    return util.validatePresenceOf(name);
+}, 'Name cannot be blank');
 
-/**
- * Pre-save hook
- */
+UserSchema.path('email').validate(function (email) {
+    return util.validatePresenceOf(email);
+}, 'Email cannot be blank');
+
+UserSchema.path('username').validate(function (username) {
+    return util.validatePresenceOf(username);
+}, 'Username cannot be blank');
+
+//Pre-save hook
 UserSchema.pre('save', function (next) {
-    if (!util.validatePresenceOf(this.name)) {
-        next(new restify.MissingParameterError('Name cannot be blank'));
-    }
-    if (!util.validatePresenceOf(this.username)) {
-        next(new restify.MissingParameterError('Username cannot be blank'));
-    }
-    if (!util.validatePresenceOf(this.email)) {
-        next(new restify.MissingParameterError('Email cannot be blank'));
-    }
-    if (this.email.indexOf('@') <= 0) {
-        next(new restify.MissingParameterError('Email address must be valid'));
-    }
+    // Update updated time
+    var now = new Date();
+    this.updated_at = now;
+
+    // Execute when is new
+    if (!this.isNew) return next();
 
     // password not blank when creating, otherwise skip
-    if (!this.isNew) return next();
     if (!util.validatePresenceOf(this.password)) {
         next(new restify.MissingParameterError('Invalid password'));
     }
 
-    // Update updated time
-    this.updated_at = new Date();
+    // Create at date
+    if (!this.created_at) {
+        this.created_at = now;
+    }
 
     next();
 });
 
-/**
- * Methods
- */
-
+// Methods
 UserSchema.methods = {
 
-    /**
-     * Authenticate - check if the passwords are the same
-     */
+    // Authenticate the password. Check if the passwords are the same
     authenticate: function (plainText) {
         return util.encryptCompare(plainText, this.hashed_password);
     },
 
-    /**
-     * allowAccess
-     */
-    allowAccess: function (role) {
-        if (this.role === 'Admin') return true; // Admin can access everything
-        if (role === 'Developer' && this.role === 'Developer') return true; // Developer can access Developer and User
-        if (role === 'User' && (this.role === 'User' || this.role === 'Developer')) return true; // user is at the bottom of special access
-        return false; // should only happen if checking access for an anonymous user
-    }
-};
-
-/**
- * Statics
- */
-
-UserSchema.statics = {
-
-    /**
-     * Encrypt password
-     */
+    // Encrypt password and return the encrypted password
     encryptPassword: function (password) {
-        return util.encryptPassword(password);
-    }
+        return util.encryptPassword(password, this.salt);
+    },
 
+    // Make salt
+    makeSalt: function () {
+        return util.generatSalt(9);
+    },
+
+    // Check if the user is an administrator
+    isAdmin: function () {
+        return this.roles.indexOf('admin') !== -1;
+    },
+
+    // Check if the user has required role
+    hasRole: function (role) {
+        var roles = this.roles;
+        return roles.indexOf('admin') !== -1 || roles.indexOf(role) !== -1;
+    }
 };
 
+// Statics
+UserSchema.statics = {
+    // Find by username
+    findByUsername: function (username, callback) {
+        this.find({
+            username: new RegExp('^' + username + '$', 'i')
+        }, callback);
+    }
+};
+
+// Create Model
 mongoose.model('User', UserSchema);

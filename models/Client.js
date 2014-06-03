@@ -5,13 +5,10 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    restify = require('restify'),
     util = require('../lib/utils'),
     scopes = require('../config/clientScopes');
 
-/*
- * Client Key Schema
- */
+// Client Key Schema
 var ClientSchema = new Schema({
     name: {
         type: String,
@@ -30,57 +27,64 @@ var ClientSchema = new Schema({
     },
     created_at: {
         type: Date,
-        default: Date.now
+        trim: true
     },
     updated_at: {
         type: Date,
-        default: Date.now
+        trim: true
     }
 });
 
-/**
- * Pre-save hook
- */
-ClientSchema.pre('save', function (next) {
-    if (!util.validatePresenceOf(this.name)) {
-        next(new restify.MissingParameterError('Name cannot be blank'));
-    }
-    if (!util.validatePresenceOf(this.secret)) {
-        next(new restify.MissingParameterError('Secret cannot be blank'));
-    }
-    if (util.validatePresenceOf(this.scopes)) {
-        if (!util.arrayInArray(scopes, this.scopes)) {
-            next(new restify.MissingParameterError('Scopes have to be in: (' + scopes.join() + ')'));
-        }
-    }
+// Index schema
+ClientSchema.index({
+    name: 1
+});
 
+// Validation
+ClientSchema.path('name').validate(function (name) {
+    return util.validatePresenceOf(name);
+}, 'Name cannot be blank');
+
+ClientSchema.path('secret').validate(function (secret) {
+    return util.validatePresenceOf(secret);
+}, 'Secret token cannot be blank');
+
+ClientSchema.path('scopes').validate(function (scope) {
+    if (util.validatePresenceOf(scope)) {
+        return util.arrayInArray(scopes, scope);
+    }
+    return true;
+}, 'Scopes have to be in: (' + scopes.join() + ')');
+
+// Pre-save hook
+ClientSchema.pre('save', function (next) {
     // Update updated time
-    this.updated_at = new Date();
+    var now = new Date();
+    this.updated_at = now;
+
+    // Execute when is new
+    if (!this.isNew) return next();
+
+    // Create at date
+    if (!this.created_at) {
+        this.created_at = now;
+    }
 
     next();
 });
 
-/**
- * Methods
- */
-
+// Methods
 ClientSchema.methods = {
-
-};
-
-/**
- * Statics
- */
-
-ClientSchema.statics = {
-
-    /**
-     * Generate Secret
-     */
+    // Generate a secret token from a string
     generateSecret: function (data) {
         return util.generateToken(data);
     }
+};
+
+// Statics
+ClientSchema.statics = {
 
 };
 
+// Create Model
 mongoose.model('Client', ClientSchema);
