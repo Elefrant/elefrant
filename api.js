@@ -10,8 +10,7 @@ require('colors');
  */
 var cluster = require('cluster'),
     datefmt = require('dateformat'),
-    //numCPUs = require('os').cpus().length;
-    numCPUs = 1;
+    numCPUs = require('os').cpus().length;
 
 // Show master info
 console.log('Creating Master'.blue);
@@ -42,7 +41,7 @@ cluster.on('exit', function (worker, code, signal) {
     console.log('worker %d died (%s). restarting...'.red.inverse, worker.process.pid, signal || code);
 
     // Auto-restart worker
-    //cluster.fork();
+    cluster.fork();
 });
 
 // Event when disconnect worker

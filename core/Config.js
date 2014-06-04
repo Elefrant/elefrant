@@ -4,28 +4,52 @@
  * Module dependencies.
  */
 var fs = require('fs'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    utils = require('../lib/utils');
 
 module.exports = function (env) {
     // Paths
-    var config_path = '../config/env',
-        env_config = {};
+    var config_path = require('path').normalize(__dirname + '/../config/config'),
+        env_path = config_path + '/env',
+        config = {};
 
     // Check if not defined env variable
     env = env || 'development';
 
+    // Get common configuration
+    utils.walkFile(config_path, null, function (path, filename) {
+        // Get name normalized
+        var name = filename.substr(0, filename.lastIndexOf('.'));
+        name = name.charAt(0).toLowerCase() + name.slice(1);
+
+        // Load configuration
+        config[name] = require(path);
+    });
+
     // Check if file exists
-    if (fs.existsSync(config_path + '/' + env)) {
-        env_config = require(config_path + '/' + env);
-    } else {
-        env_config = require(config_path + '/development');
+    if (fs.existsSync(env_path + '/' + env)) {
+        utils.walkFile(env_path + '/' + env, null, function (path, filename) {
+            // Get name normalized
+            var name = filename.substr(0, filename.lastIndexOf('.'));
+            name = name.charAt(0).toLowerCase() + name.slice(1);
+
+            // Check if property  exists
+            if (config[name]) {
+                var envConfigAux = require(path);
+
+                // Merge only the values modificated
+                config[name] = _.extend(
+                    config[name],
+                    envConfigAux
+                );
+            }
+        });
     }
 
     // Extend the base configuration in all.js with environment
     return _.extend({
             env: env
         },
-        require(config_path + '/all'),
-        env_config
+        config
     );
 };

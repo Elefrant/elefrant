@@ -19,7 +19,14 @@ var mongoose = require('mongoose'),
 // Initializing system variables
 var config = require('./core/Config')(env);
 console.log('Loading configuration'.underline);
-console.log('- Enviroment: %s'.grey, env);
+if (config.system.debug) {
+    console.log('- Enviroment: %s'.grey, env);
+}
+
+// Check if New relic is enable
+if (config.newrelic.enable) {
+    require('newrelic');
+}
 
 // Update port and host
 config.server.port = process.env.PORT || config.server.port;

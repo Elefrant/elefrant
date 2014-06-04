@@ -11,7 +11,7 @@ module.exports = function (server, config) {
         authentication = require('./middleware/authentication')(config.oauth.allowScope);
 
     // Paths
-    var routes_path = config.root + '/config/routes',
+    var routes_path = config.system.root + '/config/routes',
         routes = [];
 
     // Bootstrap routes
@@ -28,7 +28,9 @@ module.exports = function (server, config) {
         var route = routes[index];
 
         // Load route
-        console.log('- Route %s'.grey, route.path);
+        if (config.system.debug) {
+            console.log('- Route %s'.grey, route.path);
+        }
         var method = route.method.toLowerCase();
 
         // Check if method delete

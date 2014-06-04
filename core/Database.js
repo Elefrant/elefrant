@@ -3,7 +3,7 @@
 module.exports = function (config, mongoose) {
 
     // Paths
-    var models_path = config.root + '/models';
+    var models_path = config.system.root + '/models';
 
     // Connect to MongoDB
     var mongodb_path = 'mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.database;
@@ -16,7 +16,9 @@ module.exports = function (config, mongoose) {
 
     // Bootstrap models
     require('../lib/utils').walk(models_path, null, function (path, filename) {
-        console.log('- Model %s'.grey, filename);
+        if (config.system.debug) {
+            console.log('- Model %s'.grey, filename);
+        }
         require(path);
     });
 };

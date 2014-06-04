@@ -5,25 +5,20 @@
  */
 var restify = require('restify'), // Load server
     restifyValidator = require('./middleware/validator'), // Load validator
-    logger = require('bunyan'), // Load Logger system
+    bunyan = require('bunyan'), // Load Logger system
     fs = require('fs'); // Load  filesystem
 
 module.exports = function (config) {
     // Create the log listener
-    var log = logger.createLogger({
-        level: config.logger.level || 'fatal',
-        name: config.logger.name,
-        stream: config.logger.stream || process.stdout,
-        src: config.logger.src || true,
-        serializers: restify.bunyan.serializers
-    });
+    var log = require('./Logger')(config);
+    log.serializers = restify.bunyan.serializers;
 
     // Set up server
     var configServer = {
         name: config.server.name,
         version: config.server.version,
         formatters: require('./Response'),
-        log: log
+        log: bunyan.createLogger(log)
     };
 
     // Check if ssl is enable
@@ -87,9 +82,9 @@ module.exports = function (config) {
         req.headers.accept = 'application/json'; // screw you client!
 
         // Log request
-        if (config.debug) {
+        if (config.system.debug) {
             req.log.info({
-                req: req
+                x: 'req'
             }, 'Request');
         }
 
@@ -99,6 +94,11 @@ module.exports = function (config) {
     // Allow rate limit for the server
     if (config.throttle.enable) {
         require('./Throttle')(server, restify, config);
+    }
+
+    // Allow to audit every record in config level
+    if (config.audit.enable) {
+        require('./AuditLogger')(server, restify, bunyan, config);
     }
 
     //Add validator middleware to server

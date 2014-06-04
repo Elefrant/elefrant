@@ -3,7 +3,7 @@
 module.exports = function (config) {
 
     // Paths
-    var controllers_path = config.root + '/controllers',
+    var controllers_path = config.system.root + '/controllers',
         controllers = {};
 
     console.log('Loading controllers'.underline);
@@ -24,7 +24,9 @@ module.exports = function (config) {
 
         // Load require controllers
         controllers[version][name] = require(path);
-        console.log('- Controller (%s) %s'.grey, version, name);
+        if (config.system.debug) {
+            console.log('- Controller (%s) %s'.grey, version, name);
+        }
     });
 
     return controllers;

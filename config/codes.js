@@ -1,5 +1,10 @@
 'use strict';
 
+/*
+ * Response codes
+ * --------------------------
+ * List of response codes
+ */
 module.exports = {
     100: {
         code: 'Continue',
