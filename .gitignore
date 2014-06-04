@@ -31,5 +31,10 @@ node_modules
 .project
 .settings
 
+# Bower
+#.bower-registry
+#.bower-tmp
+#.bower-cache
+
 # ApiDoc
 apiDoc/**/*
