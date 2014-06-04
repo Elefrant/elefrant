@@ -32,9 +32,9 @@ node_modules
 .settings
 
 # Bower
-#.bower-registry
-#.bower-tmp
-#.bower-cache
+.bower-registry
+.bower-tmp
+.bower-cache
 
 # ApiDoc
 apiDoc/**/*
