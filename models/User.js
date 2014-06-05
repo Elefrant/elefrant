@@ -62,6 +62,11 @@ var UserSchema = new Schema({
 // Index schema
 UserSchema.index({
     username: 1,
+    email: 1,
+    roles: 1
+});
+UserSchema.index({
+    username: 1,
     email: 1
 });
 UserSchema.index({
