@@ -1,24 +1,21 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
+// Module dependencies.
 var restify = require('restify'), // Load server
     restifyValidator = require('./middleware/validator'), // Load validator
     bunyan = require('bunyan'), // Load Logger system
-    fs = require('fs'); // Load  filesystem
+    fs = require('fs'), // Load  filesystem
+    auditLogger = require('./AuditLogger'),
+    throttle = require('./Throttle'),
+    logger = require('./Logger');
 
 module.exports = function (config) {
-    // Create the log listener
-    var log = require('./Logger')(config);
-    log.serializers = restify.bunyan.serializers;
-
     // Set up server
     var configServer = {
         name: config.server.name,
         version: config.server.version,
         formatters: require('./Response'),
-        log: bunyan.createLogger(log)
+        log: logger.logger(restify, bunyan, config)
     };
 
     // Check if ssl is enable
@@ -53,15 +50,12 @@ module.exports = function (config) {
     server.use(restify.queryParser());
 
     // Logger with the current request
-    server.use(restify.requestLogger({
-        name: config.server.name,
-        version: config.server.version
-    }));
+    server.use(restify.requestLogger());
 
     // If the client sends an accept-encoding: gzip header, then the server will automatically gzip all response data
     server.use(restify.gzipResponse());
 
-    //
+    // Supports checking the query string for callback or jsonp and ensuring that the content-type is appropriately set if JSONP params are in place.
     server.use(restify.jsonp());
 
     // Add CORS Support
@@ -77,43 +71,22 @@ module.exports = function (config) {
         mapParams: false
     }));
 
+    // Allow rate limit for the server
+    server.use(throttle.throttle(server, restify, config));
+
     // Handler that run before routing occurs
     server.pre(function (req, res, next) {
         req.headers.accept = 'application/json'; // screw you client!
-
-        // Log request
-        if (config.system.debug) {
-            req.log.info({
-                x: 'req'
-            }, 'Request');
-        }
-
         return next();
     });
 
-    // Allow rate limit for the server
-    if (config.throttle.enable) {
-        require('./Throttle')(server, restify, config);
-    }
+    // TODO: Could be stats here
 
-    // Allow to audit every record in config level
-    if (config.audit.enable) {
-        require('./AuditLogger')(server, restify, bunyan, config);
-    }
+    // Allow to audit every record
+    server.on('after', auditLogger.logger(server, restify, bunyan, config));
 
     //Add validator middleware to server
     server.use(restifyValidator);
-
-    /*// Client
-    var client = restify.createJsonClient({
-        url: 'http://localhost:3100',
-        version: '~1.0'
-    });
-
-    client.get('/', function (err, req, res, obj) {
-        if (err) console.log("An error ocurred:", err);
-        else console.log('Server returned: %j', obj);
-    });*/
 
     return server;
 

@@ -20,10 +20,10 @@ var paths = {
 
 module.exports = function (grunt) {
     // Load config
-    var config = require('./core/Config')(process.env.NODE_ENV || 'development');
+    var config = require('./core/Config')();
 
     // Show time of executed tasks
-    if (process.env.NODE_ENV !== 'production') {
+    if (config.env !== 'production') {
         require('time-grunt')(grunt);
     }
 
@@ -93,11 +93,12 @@ module.exports = function (grunt) {
             }
         },
 
-        // Apidoc configuration.
+        // Dev Documentation configuration.
         docco: {
             dev: {
                 src: [
-                    'core/**/*.js'
+                    'core/**/*.js',
+                    'lib/**/*.js'
                 ],
                 options: {
                     dest: 'docs/'

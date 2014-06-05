@@ -1,8 +1,6 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
+// Module dependencies.
 var _ = require('../lib/utils');
 
 module.exports = function (server, config) {

@@ -1,8 +1,6 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
+// Module dependencies.
 var codes = require('../config/codes');
 
 // Export response format

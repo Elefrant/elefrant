@@ -10,6 +10,7 @@ module.exports = function (config, mongoose) {
     mongoose.connect(mongodb_path);
     var db = mongoose.connection;
 
+    // Show error in connection
     db.on('error', console.error.bind(console, 'connection error:'));
 
     console.log('Loading models'.underline);

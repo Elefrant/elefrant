@@ -1,8 +1,6 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
+// Module dependencies.
 var mongoose = require('mongoose'), // Load mongodb handler
     _ = require('underscore'), // Load underscore
     uuid = require('node-uuid'), // Load uuid module
@@ -14,7 +12,7 @@ module.exports = function (config) {
     // Connect to redis
     var redisClient = require('./Redis.js')(config.redis.port, config.redis.host, config.redis.options, config.redis.password, config.redis.database);
 
-    // Check if exists expire time
+    // Check if exists expire time of token
     var isExpireTime = config.oauth.tokenExpirationTime && config.oauth.tokenExpirationTime > 0;
 
     // Functions and hooks
@@ -82,6 +80,8 @@ module.exports = function (config) {
                                     redisClient.set('token:' + token.token, JSON.stringify({
                                         'customer': user.username
                                     }));
+
+                                    // Assign an expire time to token
                                     if (isExpireTime) {
                                         redisClient.expire('token:' + token.token, config.oauth.tokenExpirationTime);
                                     }
@@ -109,6 +109,8 @@ module.exports = function (config) {
                                     redisClient.set('token:' + token.token, JSON.stringify({
                                         'customer': user.username
                                     }));
+
+                                    // Assign an expire time to token
                                     if (isExpireTime) {
                                         redisClient.expire('token:' + token.token, config.oauth.tokenExpirationTime);
                                     }
@@ -228,6 +230,8 @@ module.exports = function (config) {
                                     redisClient.set('token:' + token.token, JSON.stringify({
                                         'customer': client._id
                                     }));
+
+                                    // Assign an expire time to token
                                     if (isExpireTime) {
                                         redisClient.expire('token:' + token.token, config.oauth.tokenExpirationTime);
                                     }
@@ -255,6 +259,8 @@ module.exports = function (config) {
                                     redisClient.set('token:' + token.token, JSON.stringify({
                                         'customer': client._id
                                     }));
+
+                                    // Assign an expire time to token
                                     if (isExpireTime) {
                                         redisClient.expire('token:' + token.token, config.oauth.tokenExpirationTime);
                                     }
@@ -334,6 +340,8 @@ module.exports = function (config) {
 
                                                     // Save new token info
                                                     redisClient.set('token:' + token.token, JSON.stringify(reply));
+
+                                                    // Assign an expire time to token
                                                     if (isExpireTime) {
                                                         redisClient.expire('token:' + token.token, config.oauth.tokenExpirationTime);
                                                     }

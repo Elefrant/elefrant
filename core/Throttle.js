@@ -1,6 +1,14 @@
 'use strict';
 
-module.exports = function (server, restify, config) {
+// Create throttle funtion to control rate limit
+var throttle = function (server, restify, config) {
+    // Check if not enable
+    if (!config.throttle.enable) {
+        return function (req, res, next) {
+            next();
+        };
+    }
+
     /*// Redis Token Implementation
     function RedisTable() {
         // Connect to redis
@@ -44,7 +52,7 @@ module.exports = function (server, restify, config) {
     };*/
 
     // Create throtter
-    server.use(restify.throttle({
+    return restify.throttle({
         burst: config.throttle.burst,
         rate: 50,
         ip: (config.throttle.type === 'ip') || false,
@@ -53,5 +61,6 @@ module.exports = function (server, restify, config) {
         overrides: require('../config/throttleOverride')
         /*,
         tokensTable: new RedisTable()*/
-    }));
+    });
 };
+exports.throttle = throttle;

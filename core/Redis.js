@@ -1,5 +1,6 @@
 'use strict';
 
+// Module dependencies.
 var RedisClient = require('redis');
 
 module.exports = function (port, host, options, password, database) {

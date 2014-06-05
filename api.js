@@ -1,16 +1,15 @@
 'use strict';
 
-/**
- * Cli Module dependencies.
- */
+// Module dependencies.
 require('colors');
-
-/**
- * Module dependencies.
- */
 var cluster = require('cluster'),
     datefmt = require('dateformat'),
     numCPUs = require('os').cpus().length;
+
+// Check if New relic is enable
+if (require('./lib/config').getConfigValue('newrelic', 'enable')) {
+    require('newrelic');
+}
 
 // Show master info
 console.log('Creating Master'.blue);
@@ -20,7 +19,7 @@ cluster.setupMaster({
     exec: 'server.js'
 });
 
-//Show master info
+//Show master info in console
 console.log('Master created'.underline.green);
 console.log('- Pid: %d'.grey, process.pid);
 console.log('- Time: %s'.grey, datefmt(new Date(), 'ddd, dd mmm yyyy hh:MM:ss Z'));
