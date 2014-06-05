@@ -41,7 +41,7 @@ module.exports = {
         {
             type: 'stream',
             stream: process.stdout,
-            level: 'info',
+            level: 'debug',
         }, {
             type: 'redis',
             level: 'info'

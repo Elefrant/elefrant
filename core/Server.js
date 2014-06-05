@@ -3,11 +3,9 @@
 // Module dependencies.
 var restify = require('restify'), // Load server
     restifyValidator = require('./middleware/validator'), // Load validator
-    bunyan = require('bunyan'), // Load Logger system
     fs = require('fs'), // Load  filesystem
     auditLogger = require('./AuditLogger'),
-    throttle = require('./Throttle'),
-    logger = require('./Logger');
+    throttle = require('./Throttle');
 
 module.exports = function (config) {
     // Set up server
@@ -15,7 +13,7 @@ module.exports = function (config) {
         name: config.server.name,
         version: config.server.version,
         formatters: require('./Response'),
-        log: logger.logger(restify, bunyan, config)
+        log: config.log
     };
 
     // Check if ssl is enable
@@ -71,6 +69,9 @@ module.exports = function (config) {
         mapParams: false
     }));
 
+    // Initialize server Oauth 2.0
+    require('./ServerOauth')(config, server);
+
     // Allow rate limit for the server
     server.use(throttle.throttle(server, restify, config));
 
@@ -83,11 +84,10 @@ module.exports = function (config) {
     // TODO: Could be stats here
 
     // Allow to audit every record
-    server.on('after', auditLogger.logger(server, restify, bunyan, config));
+    server.on('after', auditLogger.logger(server, config));
 
     //Add validator middleware to server
     server.use(restifyValidator);
 
     return server;
-
 };

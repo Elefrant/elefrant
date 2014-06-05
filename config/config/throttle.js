@@ -9,7 +9,7 @@ module.exports = {
      * --------------------------
      * Enable Throttle limit
      */
-    enable: false,
+    enable: true,
 
     /*
      * Burst
@@ -17,7 +17,7 @@ module.exports = {
      * The number allowed to burst to in a time window
      * [0]: Unlimited
      */
-    burst: 10,
+    burst: 1,
 
     /*
      * Rate
@@ -25,7 +25,7 @@ module.exports = {
      * Steady state number of requests/second to allow
      * [0]: Unlimited
      */
-    rate: 10,
+    rate: 1,
 
     /*
      * Type
@@ -35,7 +35,7 @@ module.exports = {
      * [xff]: Do throttling on a /32 (X-Forwarded-For)
      * [username]: Do throttling on (req.username)
      */
-    type: 'ip',
+    type: 'username',
 
     /*
      * TTL

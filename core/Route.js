@@ -19,16 +19,18 @@ module.exports = function (server, config) {
             require(path)(api, config)
         );
     });
-    console.log('Loading routes'.underline);
 
+    // Create each route
     for (var index in routes) {
         // Load route elements
         var route = routes[index];
 
-        // Load route
+        // Show create routed
         if (config.system.debug) {
-            console.log('- Route %s'.grey, route.path);
+            config.log.debug('Route %s', route.path);
         }
+
+        // Load route
         var method = route.method.toLowerCase();
 
         // Check if method delete

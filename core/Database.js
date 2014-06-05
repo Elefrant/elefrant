@@ -11,15 +11,19 @@ module.exports = function (config, mongoose) {
     var db = mongoose.connection;
 
     // Show error in connection
-    db.on('error', console.error.bind(console, 'connection error:'));
-
-    console.log('Loading models'.underline);
+    db.on('error', function (err) {
+        if (config.system.debug) {
+            config.log.error('Error in mongoDb: %s', err);
+        }
+    });
 
     // Bootstrap models
     require('../lib/utils').walk(models_path, null, function (path, filename) {
+        // Show create models
         if (config.system.debug) {
-            console.log('- Model %s'.grey, filename);
+            config.log.debug('Model %s', filename);
         }
+
         require(path);
     });
 };

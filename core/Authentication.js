@@ -10,7 +10,7 @@ var mongoose = require('mongoose'), // Load mongodb handler
 
 module.exports = function (config) {
     // Connect to redis
-    var redisClient = require('./Redis.js')(config.redis.port, config.redis.host, config.redis.options, config.redis.password, config.redis.database);
+    var redisClient = require('./Redis.js')(config);
 
     // Check if exists expire time of token
     var isExpireTime = config.oauth.tokenExpirationTime && config.oauth.tokenExpirationTime > 0;

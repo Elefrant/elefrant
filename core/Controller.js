@@ -6,8 +6,6 @@ module.exports = function (config) {
     var controllers_path = config.system.root + '/controllers',
         controllers = {};
 
-    console.log('Loading controllers'.underline);
-
     // Bootstrap controllers
     require('../lib/utils').walk(controllers_path, null, function (path, filename) {
 
@@ -24,8 +22,10 @@ module.exports = function (config) {
 
         // Load require controllers
         controllers[version][name] = require(path);
+
+        // Show create controller
         if (config.system.debug) {
-            console.log('- Controller (%s) %s'.grey, version, name);
+            config.log.debug('Controller (%s) %s', version, name);
         }
     });
 
