@@ -6,3 +6,8 @@ env:
 services:
     - redis-server
     - mongodb
+branches:
+    only:
+        - master
+        - stable
+        - beta

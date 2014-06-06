@@ -24,10 +24,17 @@ build/Release
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
 
-# Mac file
+# Mac file & Files
 .DS_Store
-
-# Files
+.tmp
+*.swo
+*.swp
+*.swn
+*.swm
+*#
+*~
+.idea
+nbproject
 .project
 .settings
 
