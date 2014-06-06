@@ -10,8 +10,8 @@
 module.exports = function (allowScope) {
     // Return check auth function
     return function (req, res, next) {
-        //console.log(req.customer);
-        if (!req.customer) {
+        //console.log(req.username);
+        if (!req.username) {
             return res.sendUnauthorized();
         }
 
