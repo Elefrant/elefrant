@@ -33,6 +33,7 @@
     "dependencies": {
         "bunyan": "^0.22.3",
         "bunyan-prettystream": "latest",
+        "async": "^0.9.x",
         "lodash": "^2.4.1",
         "underscore": "^1.6.0",
         "socket.io": "~0.9.14",

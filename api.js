@@ -7,7 +7,7 @@ var cluster = require('cluster'),
     numCPUs = require('os').cpus().length;
 
 // Check if New relic is enable
-if (require('./lib/config').getConfigValue('newrelic', 'enable')) {
+if (require('./app/lib/config').getConfigValue('newrelic', 'enable')) {
     require('newrelic');
 }
 

@@ -4,23 +4,18 @@
 var paths = {
     js: [
         '*.js',
-        'models/**/*.js',
-        'controllers/**/*.js',
-        'config/**/*.js',
-        'core/**/*.js',
-        'middleware/**/*.js',
-        'lib/**/*.js',
+        'app/**/*.js',
         'test/**/*.js',
-        'templates/basic/js/*.js'
+        'templates/docs/basic/js/*.js'
     ],
     css: [
-        'templates/basic/css/*.css'
+        'templates/docs/basic/css/*.css'
     ]
 };
 
 module.exports = function (grunt) {
     // Load config
-    var config = require('./core/Config')();
+    var config = require('./app/core/Config')();
 
     // Show time of executed tasks
     if (config.env !== 'production') {
@@ -63,18 +58,10 @@ module.exports = function (grunt) {
 
         // Clean logs and tmp files
         clean: [
-            'logs/**/*'
+            'logs/**/*',
+            '.bower-registry',
+            '.bower-cache'
         ],
-
-        // Minify files
-        /*uglify: {
-            options: {
-                mangle: false
-            },
-            production: {
-                files: '<%= assets.js %>'
-            }
-        },*/
 
         // Apidoc configuration.
         apidoc: {
@@ -97,8 +84,8 @@ module.exports = function (grunt) {
         docco: {
             dev: {
                 src: [
-                    'core/**/*.js',
-                    'lib/**/*.js'
+                    'app/core/**/*.js',
+                    'app/lib/**/*.js'
                 ],
                 options: {
                     dest: 'docs/'
@@ -141,13 +128,16 @@ module.exports = function (grunt) {
                     },
                     cwd: __dirname
                 }
+            },
+            dummy: {
+                script: 'app/core/database/Seed.js',
             }
         },
 
         // Concurrent tasks
         concurrent: {
             dev: {
-                tasks: ['nodemon', 'watch'],
+                tasks: ['nodemon:dev', 'watch'],
                 options: {
                     logConcurrentOutput: true
                 }
@@ -191,7 +181,6 @@ module.exports = function (grunt) {
 
     //Default task(s).
     if (process.env.NODE_ENV === 'production') {
-        //grunt.registerTask('default', ['uglify', 'apidoc', 'concurrent:prod']);
         grunt.registerTask('default', ['clean', 'apidoc', 'concurrent:prod']);
     } else {
         grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'apidoc', 'concurrent:dev']);
@@ -205,5 +194,8 @@ module.exports = function (grunt) {
 
     //Generate documentation task.
     grunt.registerTask('doc', ['apidoc', 'docco']);
+
+    //Generate dummy database task.
+    grunt.registerTask('dummy', ['nodemon:dummy']);
 
 }; // module.exports
