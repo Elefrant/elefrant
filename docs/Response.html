@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Response.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="AuditLogger.html">
+                AuditLogger.js
+              </a>
+            
+              
+              <a class="source" href="Authentication.html">
+                Authentication.js
+              </a>
+            
+              
+              <a class="source" href="Config.html">
+                Config.js
+              </a>
+            
+              
+              <a class="source" href="Controller.html">
+                Controller.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Logger.html">
+                Logger.js
+              </a>
+            
+              
+              <a class="source" href="Redis.html">
+                Redis.js
+              </a>
+            
+              
+              <a class="source" href="Response.html">
+                Response.js
+              </a>
+            
+              
+              <a class="source" href="Route.html">
+                Route.js
+              </a>
+            
+              
+              <a class="source" href="Server.html">
+                Server.js
+              </a>
+            
+              
+              <a class="source" href="ServerOauth.html">
+                ServerOauth.js
+              </a>
+            
+              
+              <a class="source" href="Stats.html">
+                Stats.js
+              </a>
+            
+              
+              <a class="source" href="Throttle.html">
+                Throttle.js
+              </a>
+            
+              
+              <a class="source" href="authentication.html">
+                authentication.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+              
+              <a class="source" href="config.html">
+                config.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>Response.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-pi">'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Module dependencies.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> codes = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../config/codes'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Export response format</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>module.exports = {
+    <span class="hljs-string">'application/hal+json'</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(req, res, body)</span> {</span>
+        <span class="hljs-keyword">return</span> res.formatters[<span class="hljs-string">'application/json'</span>](req, res, body);
+    },
+    <span class="hljs-string">'application/json'</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">customizedFormatJSON</span><span class="hljs-params">(req, res, body)</span> {</span>
+        <span class="hljs-keyword">if</span> (body <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Error</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>snoop for RestError or HttpError, but don’t rely on
+instanceof</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            res.statusCode = body.statusCode;
+
+            <span class="hljs-keyword">if</span> (body.body) {
+                body = {
+                    code: res.statusCode,
+                    status: body.body.code || codes[res.statusCode].code,
+                    message: body.body.message || body.body.error_description || codes[res.statusCode].description
+                };
+            } <span class="hljs-keyword">else</span> {
+                body = {
+                    code: res.statusCode,
+                    msg: body.message || codes[res.statusCode].description
+                };
+            }
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (Buffer.isBuffer(body)) {
+            body = body.toString(<span class="hljs-string">'base64'</span>);
+        }
+
+        <span class="hljs-keyword">var</span> data = <span class="hljs-built_in">JSON</span>.stringify(body);
+        res.setHeader(<span class="hljs-string">'Content-Length'</span>, Buffer.byteLength(data));
+
+        <span class="hljs-keyword">return</span> data;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

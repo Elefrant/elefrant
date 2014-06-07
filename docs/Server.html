@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Server.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="AuditLogger.html">
+                AuditLogger.js
+              </a>
+            
+              
+              <a class="source" href="Authentication.html">
+                Authentication.js
+              </a>
+            
+              
+              <a class="source" href="Config.html">
+                Config.js
+              </a>
+            
+              
+              <a class="source" href="Controller.html">
+                Controller.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Logger.html">
+                Logger.js
+              </a>
+            
+              
+              <a class="source" href="Redis.html">
+                Redis.js
+              </a>
+            
+              
+              <a class="source" href="Response.html">
+                Response.js
+              </a>
+            
+              
+              <a class="source" href="Route.html">
+                Route.js
+              </a>
+            
+              
+              <a class="source" href="Server.html">
+                Server.js
+              </a>
+            
+              
+              <a class="source" href="ServerOauth.html">
+                ServerOauth.js
+              </a>
+            
+              
+              <a class="source" href="Stats.html">
+                Stats.js
+              </a>
+            
+              
+              <a class="source" href="Throttle.html">
+                Throttle.js
+              </a>
+            
+              
+              <a class="source" href="authentication.html">
+                authentication.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+              
+              <a class="source" href="config.html">
+                config.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>Server.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-pi">'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Module dependencies.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> restify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'restify'</span>), <span class="hljs-comment">// Load server</span>
+    restifyValidator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./middleware/validator'</span>), <span class="hljs-comment">// Load validator</span>
+    fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>), <span class="hljs-comment">// Load  filesystem</span>
+    auditLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./AuditLogger'</span>),
+    throttle = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Throttle'</span>);
+
+module.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(config)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Set up server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> configServer = {
+        name: config.server.name,
+        version: config.server.version,
+        formatters: <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Response'</span>),
+        log: config.log
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Check if ssl is enable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (config.ssl.enable) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Get ssl key</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (config.ssl.key &amp;&amp; (config.ssl.key.length() &gt;= <span class="hljs-number">1</span>)) {
+            configServer.key = fs.readFileSync(config.ssl.key);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Get ssl cert</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (config.ssl.cert &amp;&amp; (config.ssl.cert.length() &gt;= <span class="hljs-number">1</span>)) {
+            configServer.cert = fs.readFileSync(config.ssl.cert);
+        }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Create server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> server = restify.createServer(configServer);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Trailing / characters</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.pre(restify.pre.sanitizePath());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Ensures that the server can respond to what the client asked for</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.acceptParser(server.acceptable));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Parses out the Authorization header (HTTP Basic Auth and HTTP Signature schemes are supported)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.authorizationParser());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Parses out the HTTP Date header (if present) and checks for clock skew</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.dateParser());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Parses the HTTP query string (i.e., /foo?id=bar&amp;name=mark)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.queryParser());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Logger with the current request</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.requestLogger());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>If the client sends an accept-encoding: gzip header, then the server will automatically gzip all response data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.gzipResponse());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Supports checking the query string for callback or jsonp and ensuring that the content-type is appropriately set if JSONP params are in place.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.jsonp());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Add CORS Support
+restify.CORS.ALLOW_HEADERS.push( ‘my-custom-header’ );
+server.use(restify.CORS({ headers: [ ‘my-custom-header’ ], origins: [‘*’] }));</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.CORS({
+        origins: [<span class="hljs-string">'*'</span>]
+    }));
+    server.use(restify.fullResponse());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Blocks your chain on reading and parsing the HTTP request body</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restify.bodyParser({
+        mapParams: <span class="hljs-literal">false</span>
+    }));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Initialize server Oauth 2.0</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">require</span>(<span class="hljs-string">'./ServerOauth'</span>)(config, server);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Allow rate limit for the server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(throttle.throttle(server, restify, config));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Handler that run before routing occurs</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.pre(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(req, res, next)</span> {</span>
+        req.headers.accept = <span class="hljs-string">'application/json'</span>; <span class="hljs-comment">// screw you client!</span>
+        <span class="hljs-keyword">return</span> next();
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>TODO: Could be stats here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Allow to audit every record</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.on(<span class="hljs-string">'after'</span>, auditLogger.logger(server, config));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Add validator middleware to server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restifyValidator);
+
+    <span class="hljs-keyword">return</span> server;
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
