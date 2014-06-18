@@ -1,0 +1,10 @@
+[
+    {
+        "secret": "mOCxTQppXYz0i6FtP1mxRjL4edS5XJD1nEUdy8trUTI=",
+        "name": "My awesome app",
+        "scopes": [
+            "read",
+            "write"
+        ]
+    }
+]

@@ -55,16 +55,18 @@ module.exports = {
      *  }
      *
      */
-    status: function (req, res, next) {
-        // Get status values
-        var status = {
-            name: require('../../package.json').name,
-            version: require('../../package.json').version,
-            state: 'Service is operating normally.'
-        };
+    status: {
+        action: function (req, res, next) {
+            // Get status values
+            var status = {
+                name: require('../../../package.json').name,
+                version: require('../../../package.json').version,
+                state: 'Service is operating normally.'
+            };
 
-        // Send status
-        res.send(status);
+            // Send status
+            res.send(status);
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -91,14 +93,16 @@ module.exports = {
      *  }
      *
      */
-    tos: function (req, res, next) {
-        // Get params
-        var tos = {
-            tos: 'Terms of Service\n\n\nThese Terms of Service (\"Terms\") govern your access to and use of the services, including our various websites, SMS, APIs, email notifications, applications, buttons, and widgets.'
-        };
+    tos: {
+        action: function (req, res, next) {
+            // Get params
+            var tos = {
+                tos: 'Terms of Service\n\n\nThese Terms of Service (\"Terms\") govern your access to and use of the services, including our various websites, SMS, APIs, email notifications, applications, buttons, and widgets.'
+            };
 
-        // Send tos
-        res.send(tos);
+            // Send tos
+            res.send(tos);
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -125,14 +129,16 @@ module.exports = {
      *  }
      *
      */
-    privacy: function (req, res, next) {
-        // Get params
-        var privacy = {
-            privacy: 'Api Privacy Policy\n\nThe Apiv service instantly connects devs everywhere to what\u2019s most meaningful to them. Any user can create their own api service.'
-        };
+    privacy: {
+        action: function (req, res, next) {
+            // Get params
+            var privacy = {
+                privacy: 'Api Privacy Policy\n\nThe Apiv service instantly connects devs everywhere to what\u2019s most meaningful to them. Any user can create their own api service.'
+            };
 
-        // Send privacy
-        res.send(privacy);
+            // Send privacy
+            res.send(privacy);
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -159,13 +165,15 @@ module.exports = {
      *  }
      *
      */
-    configuration: function (req, res, next) {
-        // Get params
-        var configuration = {
-            input: 'example of configuration, change in HelpController'
-        };
+    configuration: {
+        action: function (req, res, next) {
+            // Get params
+            var configuration = {
+                input: 'example of configuration, change in HelpController'
+            };
 
-        // Send configuration
-        res.send(configuration);
+            // Send configuration
+            res.send(configuration);
+        }
     }
 };

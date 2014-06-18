@@ -39,8 +39,8 @@
               </a>
             
               
-              <a class="source" href="Database.html">
-                Database.js
+              <a class="source" href="Documentation.html">
+                Documentation.js
               </a>
             
               
@@ -81,6 +81,16 @@
               
               <a class="source" href="Throttle.html">
                 Throttle.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Seed.html">
+                Seed.js
               </a>
             
               
@@ -159,7 +169,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> api = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Controller'</span>)(config),
-        authentication = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./middleware/authentication'</span>)(config.oauth.allowScope);</pre></div></div>
+        auth = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./middleware/authentication'</span>);</pre></div></div>
             
         </li>
         
@@ -174,7 +184,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> routes_path = config.system.root + <span class="hljs-string">'/config/routes'</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> routes_path = config.system.rootApp + <span class="hljs-string">'/config/routes'</span>,
         routes = [];</pre></div></div>
             
         </li>
@@ -298,11 +308,19 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Check if is an authorization route and is enable</p>
+              <p>Create route</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (config.oauth.enable &amp;&amp; route.auth) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            server[method]({
+                name: route.name,
+                url: route.path,
+                version: route.version,
+                swagger: route.swagger || <span class="hljs-literal">null</span>,
+                validation: route.validation || <span class="hljs-literal">null</span>,
+            }, auth.isAuthenticate(route.auth, route.scopes, config.oauth.allowScopes), route.action);
+        }
+    }</pre></div></div>
             
         </li>
         
@@ -313,38 +331,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Create rout</p>
+              <p>Generate documentation and routes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                server[method]({
-                    name: route.name,
-                    path: route.path,
-                    version: route.version
-                }, authentication, route.action);
-            } <span class="hljs-keyword">else</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>Create rout</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                server[method]({
-                    name: route.name,
-                    path: route.path,
-                    version: route.version
-                }, route.action);
-            }
-        }
-    }
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Documentation'</span>)(server, config);
 };</pre></div></div>
             
         </li>

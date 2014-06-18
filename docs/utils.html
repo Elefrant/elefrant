@@ -39,8 +39,8 @@
               </a>
             
               
-              <a class="source" href="Database.html">
-                Database.js
+              <a class="source" href="Documentation.html">
+                Documentation.js
               </a>
             
               
@@ -81,6 +81,16 @@
               
               <a class="source" href="Throttle.html">
                 Throttle.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Seed.html">
+                Seed.js
               </a>
             
               
@@ -150,7 +160,7 @@
     fs.readdirSync(modulesPath).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(file)</span> {</span>
         <span class="hljs-keyword">var</span> newPath = path.join(modulesPath, file),
             stat = fs.statSync(newPath);
-        <span class="hljs-keyword">if</span> (stat.isFile() &amp;&amp; <span class="hljs-regexp">/(.*)\.(js|coffee)$/</span>.test(file)) {
+        <span class="hljs-keyword">if</span> (stat.isFile() &amp;&amp; <span class="hljs-regexp">/(.*)\.(js|coffee|json)$/</span>.test(file)) {
             callback(newPath, file);
         } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (stat.isDirectory() &amp;&amp; file !== excludeDir) {
             walk(newPath, excludeDir, callback);
@@ -168,7 +178,7 @@ exports.walk = walk;
     fs.readdirSync(modulesPath).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(file)</span> {</span>
         <span class="hljs-keyword">var</span> newPath = path.join(modulesPath, file),
             stat = fs.statSync(newPath);
-        <span class="hljs-keyword">if</span> (stat.isFile() &amp;&amp; <span class="hljs-regexp">/(.*)\.(js|coffee)$/</span>.test(file)) {
+        <span class="hljs-keyword">if</span> (stat.isFile() &amp;&amp; <span class="hljs-regexp">/(.*)\.(js|coffee|json)$/</span>.test(file)) {
             callback(newPath, file);
         }
     });
@@ -410,7 +420,7 @@ exports.objClone = objClone;
 <span class="hljs-comment">/*
  * Collapse Object to Array
  * --------------------------
- * Try to callapse an object to an array
+ * Try to collapse an object to an array
  */</span>
 <span class="hljs-keyword">var</span> objectToArray = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(obj)</span> {</span>
     <span class="hljs-keyword">try</span> {

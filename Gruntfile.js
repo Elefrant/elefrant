@@ -22,8 +22,10 @@ module.exports = function (grunt) {
         require('time-grunt')(grunt);
     }
 
+    var pkg = grunt.file.readJSON('package.json');
+
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: pkg,
 
         // Watch changes in files
         watch: {
@@ -93,6 +95,17 @@ module.exports = function (grunt) {
             }
         },
 
+        // Check version of elefrant
+        github_version: {
+            all: {
+                options: {
+                    username: 'marsanla',
+                    repository: 'grunt-github-version',
+                    version: pkg.elefrant
+                }
+            }
+        },
+
         // Set a default enviroment
         env: {
             test: {
@@ -129,7 +142,7 @@ module.exports = function (grunt) {
                     cwd: __dirname
                 }
             },
-            dummy: {
+            seed: {
                 script: 'app/core/database/Seed.js',
             }
         },
@@ -181,21 +194,21 @@ module.exports = function (grunt) {
 
     //Default task(s).
     if (process.env.NODE_ENV === 'production') {
-        grunt.registerTask('default', ['clean', 'apidoc', 'concurrent:prod']);
+        grunt.registerTask('default', ['clean', 'github_version', 'concurrent:prod']);
     } else {
-        grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'apidoc', 'concurrent:dev']);
+        grunt.registerTask('default', ['clean', 'github_version', 'jshint', 'csslint', 'concurrent:dev']);
     }
 
     // Production task
-    grunt.registerTask('production', ['clean', 'env:prod', 'apidoc', 'concurrent:prod']);
+    grunt.registerTask('production', ['clean', 'github_version', 'env:prod', 'concurrent:prod']);
 
     //Test task.
-    grunt.registerTask('test', ['clean', 'env:test', 'mochaTest']);
+    grunt.registerTask('test', ['clean', 'github_version', 'env:test', 'mochaTest']);
 
     //Generate documentation task.
-    grunt.registerTask('doc', ['apidoc', 'docco']);
+    grunt.registerTask('doc', ['jshint', 'csslint', 'apidoc', 'docco']);
 
     //Generate dummy database task.
-    grunt.registerTask('dummy', ['nodemon:dummy']);
+    grunt.registerTask('seed', ['jshint', 'nodemon:seed']);
 
-}; // module.exports
+};

@@ -147,7 +147,7 @@ module.exports = function (config) {
                             // Check is not expire
                             if (isExpireTime) {
                                 var now = new Date(),
-                                    updated = new Date(authToken.updated_at),
+                                    updated = new Date(authToken.updatedAt),
                                     expire_time = updated.setSeconds(updated.getSeconds() + config.oauth.tokenExpirationTime);
 
                                 // Check if valid token

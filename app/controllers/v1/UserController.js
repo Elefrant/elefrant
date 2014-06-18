@@ -8,6 +8,24 @@ var mongoose = require('mongoose'),
     util = require('util'),
     User = mongoose.model('User');
 
+/*
+ * swagger: { // Only if swagger is activate. Optional
+        summary: 'Summary of function',
+        notes: 'Long description of function',
+        nickname: 'nickname',
+        responseClass: modelStructure,
+        errorResponses: [List of errors]
+    },
+    validation: { // Optional. Used if you has swagger enabled
+        fieldName: {
+            isRequired: true or function(),
+            scope: 'query | body | path | file',
+            swaggerType: 'Type of param',
+            description: 'Description of the parameter'
+        },
+    },
+ */
+
 /**
  * @apiDefineErrorStructure ErrorStructure
  *
@@ -26,7 +44,19 @@ var mongoose = require('mongoose'),
  *  {
  *      "code": 409,
  *      "status": "InvalidArgument",
- *      "message": "[ { param: 'email', msg: 'Email must be valid.', value: 'john.doeexample.com' } ]"
+ *      "message": "{
+ *          message: 'Validation failed',
+ *          name: 'ValidationError',
+ *          errors: {
+ *              email: {
+ *                  message: 'Email address must be valid',
+ *                  name: 'ValidatorError',
+ *                  path: 'email',
+ *                  type: 'user defined',
+ *                  value: 'johndoeexample.com'
+ *              }
+ *          }
+ *      }"
  *  }
  */
 
@@ -97,59 +127,101 @@ module.exports = {
      * @apiErrorStructure ErrorStructure
      * @apiErrorStructure InvalidArgument
      */
-    add: function (req, res, next) {
-        res.send(req.customer);
+    add: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            consumes: ['application/json'],
+            responseClass: 'UsersCreate',
+            responseMessages: [
+                {
+                    code: 400,
+                    message: 'Invalid ID supplied'
+                },
+                {
+                    code: 404,
+                    message: 'Order not found'
+                }
+            ]
+        },
 
-        /*// Get params from body
-        req.checkBody('name', 'Name must be valid.').notEmpty();
-        req.checkBody('email', 'Email must be valid.').notEmpty().isEmail();
-        req.checkBody('username', 'Username must be more than 5 chars.').notEmpty().len(5);
-        req.checkBody('password', 'Password must be between 6 and 20 chars.').notEmpty().len(6, 20);
-        req.checkBody('vPassword', 'Password and Verify Password must match.').notEmpty().equals(req.body.password);
-
-        // Only for admin
-        var rolesUser = ['user'],
-            isAdmin = true;
-        if (req.body.roles && isAdmin) {
-            req.checkBody('role', 'Role has to be <user>, <developer>, <admin>').isIn(['user', 'developer', 'admin']);
-            rolesUser = req.body.roles;
-        }
-
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create an User Object
-        var user = new User({
-            name: req.body.name,
-            email: req.body.email,
-            username: req.body.username,
-            password: req.body.password,
-            roles: rolesUser
-        });
-
-        // Save user
-        user.save(function (err, user) {
-            console.log(err);
-            if (err) {
-                // Send error
-                return next(err);
-            } else {
-                // Format user
-                user = {
-                    _id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    username: user.username,
-                    roles: user.role
-                };
-
-                // Send result
-                res.send(user);
+        // Validations of params
+        validation: {
+            name: {
+                isRequired: true,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
+            },
+            email: {
+                isRequired: true,
+                isEmail: true,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
+            },
+            username: {
+                isRequired: true,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
+            },
+            password: {
+                isRequired: true,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
+            },
+            roles: {
+                isRequired: false,
+                isIn: ['user', 'developer', 'admin'],
+                scope: 'body',
+                swaggerType: 'array',
+                description: ''
             }
-        });*/
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Only for admin
+            var rolesUser = null,
+                isAdmin = true;
+            if (req.body.roles && isAdmin) {
+                rolesUser = req.body.roles;
+            }
+
+            // Create an User Object
+            var user = new User({
+                name: req.body.name,
+                email: req.body.email,
+                username: req.body.username,
+                password: req.body.password,
+                roles: rolesUser || ['user']
+            });
+
+            // Save user
+            user.save(function (err, user) {
+                if (err) {
+                    // Send error
+                    return next(new restify.InvalidArgumentError(util.inspect(err)));
+                } else {
+                    // Format user
+                    user = {
+                        _id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        username: user.username,
+                        roles: user.roles
+                    };
+
+                    // Send result
+                    res.send(user);
+                }
+            });
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -200,49 +272,95 @@ module.exports = {
      * @apiErrorStructure UsersNotFound
      * @apiErrorStructure InvalidArgument
      */
-    findAll: function (req, res, next) {
-        // Check if exists filters
-        var filters = null;
-        if (req.params.id) {
-            req.check('id', 'Id must be valid.').isObjectId();
-            filters.id = req.params.id;
-        }
-        if (req.params.username) {
-            req.check('username', 'Username must be valid.');
-            filters.username = req.params.username;
-        }
+    findAll: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User',
+            errorResponses: []
+        },
 
-        // Check if exists options
-        var options = null;
-        if (req.params.count) {
-            req.check('count', 'Count must be more than 0.').isMore(1).isInt();
-            options = {
-                limit: req.params.count
-            };
-        }
-
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name email username role';
-
-        // Find users
-        User.find(filters, showValues, options, function (err, users) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!users) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('Users not found.'));
-            } else {
-                // Send result
-                res.send(users);
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: false,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'query',
+                swaggerType: 'string',
+                description: 'df'
+            },
+            username: {
+                isRequired: false,
+                scope: 'query',
+                swaggerType: 'string',
+                description: ''
+            },
+            page: {
+                isRequired: false,
+                isInt: true,
+                min: 1,
+                scope: 'query',
+                swaggerType: 'integer',
+                description: ''
+            },
+            count: {
+                isRequired: false,
+                isInt: true,
+                min: 1,
+                scope: 'query',
+                swaggerType: 'integer',
+                description: ''
             }
-        });
+        },
+
+        // Model for swagger
+        models: User.swaggerDef,
+
+        // Action of function
+        action: function (req, res, next) {
+            // Check if exists filters
+            var filters = {},
+
+                // Check if exists options
+                page = req.params.page || 1,
+                count = req.params.count || 20,
+                options = {
+                    columns: 'name email username roles',
+                    //populate: 'some_ref',
+                    sortBy: {
+                        name: 1
+                    }
+                };
+
+            if (req.params.id) filters.id = req.params.id;
+            if (req.params.username) filters.username = req.params.username;
+
+            // Search with pagination
+            // Filters | page number | results per page | callback | options
+            User.paginate(filters, page, count, function (err, pageCount, paginatedResults, itemCount) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (itemCount === 0) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('Users not found.'));
+                } else {
+                    // Send result
+                    var result = {
+                        results: paginatedResults,
+                        meta: {
+                            count: itemCount,
+                            page: page,
+                            total_page: pageCount
+                        }
+                    };
+                    res.send(result);
+                }
+            }, options);
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -285,34 +403,49 @@ module.exports = {
      * @apiErrorStructure UserNotFound
      * @apiErrorStructure InvalidArgument
      */
-    findByUser: function (req, res, next) {
-        // Get params
-        req.check('id', 'Id must be valid.').notEmpty().isObjectId();
+    findByUser: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name email username role';
-
-        // Find user
-        User.findOne({
-            _id: req.params.id
-        }, showValues, function (err, user) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!user) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('User not found.'));
-            } else {
-                // Send result
-                res.send(user);
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: true,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'path',
+                swaggerType: 'string',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create values to show in result
+            var showValues = 'name email username roles';
+
+            // Find user
+            User.findOne({
+                _id: req.params.id
+            }, showValues, function (err, user) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (!user) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('User not found.'));
+                } else {
+                    // Send result
+                    res.send(user);
+                }
+            });
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -358,71 +491,89 @@ module.exports = {
      * @apiErrorStructure UserNotFound
      * @apiErrorStructure InvalidArgument
      */
-    update: function (req, res, next) {
-        // Get params
-        req.check('id', 'Id must be valid.').notEmpty().isObjectId();
+    update: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        if (req.body.name) {
-            req.checkBody('name', 'Name must contain only letters.');
-        }
-        if (req.body.email) {
-            req.checkBody('email', 'Email must be valid.').isEmail();
-        }
-        if (req.body.username) {
-            req.checkBody('username', 'Username must be more than 5 chars.').len(5);
-        }
-
-        // Only for admin
-        var isAdmin = true;
-        if (req.body.role && isAdmin) {
-            req.checkBody('role', 'Role has to be <user>, <developer>, <admin>').isIn(['user', 'developer', 'admin']);
-        }
-
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name email username role';
-
-        // Find user
-        User.findOne({
-            _id: req.params.id
-        }, showValues, function (err, user) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!user) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('User not found.'));
-            } else {
-                user.name = req.body.name || user.name;
-                user.username = req.body.username || user.username;
-                user.email = req.body.email || user.email;
-
-                // Save user
-                user.save(function (err, userSave) {
-                    if (err) {
-                        // Send error
-                        return next(err);
-                    } else {
-                        // Format user
-                        userSave = {
-                            _id: userSave._id,
-                            name: userSave.name,
-                            email: userSave.email,
-                            username: userSave.username,
-                            role: userSave.role
-                        };
-
-                        // Send result
-                        res.send(userSave);
-                    }
-                });
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: true,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'path',
+                swaggerType: 'string',
+                description: ''
+            },
+            name: {
+                isRequired: false,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
+            },
+            email: {
+                isRequired: false,
+                isEmail: true,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
+            },
+            username: {
+                isRequired: false,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create values to show in result
+            var showValues = 'name email username roles';
+
+            // Find user
+            User.findOne({
+                _id: req.params.id
+            }, showValues, function (err, user) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (!user) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('User not found.'));
+                } else {
+                    user.name = req.body.name || user.name;
+                    user.username = req.body.username || user.username;
+                    user.email = req.body.email || user.email;
+
+                    // Save user
+                    user.save(function (err, userSave) {
+                        if (err) {
+                            // Send error
+                            return next(err);
+                        } else {
+                            // Format user
+                            userSave = {
+                                _id: userSave._id,
+                                name: userSave.name,
+                                email: userSave.email,
+                                username: userSave.username,
+                                role: userSave.role
+                            };
+
+                            // Send result
+                            res.send(userSave);
+                        }
+                    });
+                }
+            });
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -462,41 +613,56 @@ module.exports = {
      * @apiErrorStructure UserNotFound
      * @apiErrorStructure InvalidArgument
      */
-    destroy: function (req, res, next) {
-        // Get params
-        req.check('id', 'Id must be valid.').notEmpty().isObjectId();
+    destroy: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name email username role';
-
-        // Find user
-        User.findOne({
-            _id: req.params.id
-        }, showValues, function (err, user) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!user) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('User not found.'));
-            } else {
-                // Delete user
-                user.remove(function (err, userDel) {
-                    if (err) {
-                        // Send error
-                        return next(err);
-                    } else {
-                        // Send result
-                        res.send(userDel);
-                    }
-                });
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: true,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'path',
+                swaggerType: 'string',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create values to show in result
+            var showValues = 'name email username roles';
+
+            // Find user
+            User.findOne({
+                _id: req.params.id
+            }, showValues, function (err, user) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (!user) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('User not found.'));
+                } else {
+                    // Delete user
+                    user.remove(function (err, userDel) {
+                        if (err) {
+                            // Send error
+                            return next(err);
+                        } else {
+                            // Send result
+                            res.send(userDel);
+                        }
+                    });
+                }
+            });
+        }
     }
 };

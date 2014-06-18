@@ -5,7 +5,6 @@
  */
 var mongoose = require('mongoose'),
     restify = require('restify'),
-    util = require('util'),
     Client = mongoose.model('Client');
 
 /**
@@ -86,41 +85,55 @@ module.exports = {
      * @apiErrorStructure ErrorStructure
      * @apiErrorStructure InvalidArgument
      */
-    add: function (req, res, next) {
-        // Get params from body
-        req.checkBody('name', 'Name must be valid and more than 3 chars.').notEmpty().len(3);
+    add: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'ClientsCreate', // TODO
+            errorResponses: []
+        },
 
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
+        // Validations of params
+        validation: {
+            name: {
+                isRequired: true,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
+            },
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create an Client Object
+            var client = new Client({
+                name: req.body.name
+            });
+            console.log(client._id);
+            //  Encrypt
+            client.secret = client.generateSecret(client._id + ':' + client.name);
+
+            // Save client
+            client.save(function (err, client) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else {
+                    // Format client
+                    client = {
+                        _id: client._id,
+                        secret: client.secret,
+                        name: client.name
+                    };
+
+                    // Send result
+                    res.send(client);
+                }
+            });
         }
-
-        // Create an Client Object
-        var client = new Client({
-            name: req.body.name
-        });
-        console.log(client._id);
-        //  Encrypt
-        client.secret = client.generateSecret(client._id + ':' + client.name);
-
-        // Save client
-        client.save(function (err, client) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else {
-                // Format client
-                client = {
-                    _id: client._id,
-                    secret: client.secret,
-                    name: client.name
-                };
-
-                // Send result
-                res.send(client);
-            }
-        });
     },
 
     //-----------------------------------------------------------------------------------
@@ -165,49 +178,92 @@ module.exports = {
      * @apiErrorStructure ClientsNotFound
      * @apiErrorStructure InvalidArgument
      */
-    findAll: function (req, res, next) {
-        // Check if exists filters
-        var filters = null;
-        if (req.params.id) {
-            req.check('id', 'Id must be valid.').isObjectId();
-            filters.id = req.params.id;
-        }
-        if (req.params.name) {
-            req.check('name', 'Name must be valid.');
-            filters.name = req.params.name;
-        }
+    findAll: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        // Check if exists options
-        var options = null;
-        if (req.params.count) {
-            req.check('count', 'Count must be more than 0.').isMore(1).isInt();
-            options = {
-                limit: req.params.count
-            };
-        }
-
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name secret';
-
-        // Find clients
-        Client.find(filters, showValues, options, function (err, clients) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!clients) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('Clients not found.'));
-            } else {
-                // Send result
-                res.send(clients);
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: false,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'query',
+                swaggerType: 'string',
+                description: ''
+            },
+            username: {
+                isRequired: false,
+                scope: 'query',
+                swaggerType: 'string',
+                description: ''
+            },
+            page: {
+                isRequired: false,
+                isInt: true,
+                min: 1,
+                scope: 'query',
+                swaggerType: 'integer',
+                description: ''
+            },
+            count: {
+                isRequired: false,
+                isInt: true,
+                min: 1,
+                scope: 'query',
+                swaggerType: 'integer',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Check if exists filters
+            var filters = {},
+
+                // Check if exists options
+                page = req.params.page || 1,
+                count = req.params.count || 20,
+                options = {
+                    columns: 'name secret',
+                    //populate: 'some_ref',
+                    sortBy: {
+                        name: 1
+                    }
+                };
+
+            if (req.params.id) filters.id = req.params.id;
+            if (req.params.name) filters.name = req.params.name;
+
+            // Search with pagination
+            // Filters | page number | results per page | callback | options
+            Client.paginate(filters, page, count, function (err, pageCount, paginatedResults, itemCount) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (itemCount === 0) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('Clients not found.'));
+                } else {
+                    // Send result
+                    var result = {
+                        results: paginatedResults,
+                        meta: {
+                            count: itemCount,
+                            page: page,
+                            total_page: pageCount
+                        }
+                    };
+                    res.send(result);
+                }
+            }, options);
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -243,34 +299,49 @@ module.exports = {
      * @apiErrorStructure ClientNotFound
      * @apiErrorStructure InvalidArgument
      */
-    findByUser: function (req, res, next) {
-        // Get params
-        req.check('id', 'Id must be valid.').notEmpty().isObjectId();
+    findByUser: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name secret';
-
-        // Find client
-        Client.findOne({
-            _id: req.params.id
-        }, showValues, function (err, client) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!client) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('Client not found.'));
-            } else {
-                // Send result
-                res.send(client);
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: true,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'path',
+                swaggerType: 'string',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create values to show in result
+            var showValues = 'name secret';
+
+            // Find client
+            Client.findOne({
+                _id: req.params.id
+            }, showValues, function (err, client) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (!client) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('Client not found.'));
+                } else {
+                    // Send result
+                    res.send(client);
+                }
+            });
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -307,55 +378,72 @@ module.exports = {
      * @apiErrorStructure ClientNotFound
      * @apiErrorStructure InvalidArgument
      */
-    update: function (req, res, next) {
-        // Get params
-        req.check('id', 'Id must be valid.').notEmpty().isObjectId();
+    update: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        if (req.body.name) {
-            req.checkBody('name', 'Name must be valid.');
-        }
-
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name email username role';
-
-        // Find client
-        Client.findOne({
-            _id: req.params.id
-        }, showValues, function (err, client) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!client) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('Client not found.'));
-            } else {
-                client.name = req.body.name || client.name;
-
-                // Save client
-                client.save(function (err, clientSave) {
-                    if (err) {
-                        // Send error
-                        return next(err);
-                    } else {
-                        // Format client
-                        clientSave = {
-                            _id: clientSave._id,
-                            secret: clientSave.secret,
-                            name: clientSave.name
-                        };
-
-                        // Send result
-                        res.send(clientSave);
-                    }
-                });
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: true,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'path',
+                swaggerType: 'string',
+                description: ''
+            },
+            name: {
+                isRequired: false,
+                scope: 'body',
+                swaggerType: 'string',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create values to show in result
+            var showValues = 'name email username role';
+
+            // Find client
+            Client.findOne({
+                _id: req.params.id
+            }, showValues, function (err, client) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (!client) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('Client not found.'));
+                } else {
+                    client.name = req.body.name || client.name;
+
+                    // Save client
+                    client.save(function (err, clientSave) {
+                        if (err) {
+                            // Send error
+                            return next(err);
+                        } else {
+                            // Format client
+                            clientSave = {
+                                _id: clientSave._id,
+                                secret: clientSave.secret,
+                                name: clientSave.name
+                            };
+
+                            // Send result
+                            res.send(clientSave);
+                        }
+                    });
+                }
+            });
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -391,52 +479,67 @@ module.exports = {
      * @apiErrorStructure ClientNotFound
      * @apiErrorStructure InvalidArgument
      */
-    updateToken: function (req, res, next) {
-        // Get params
-        req.check('id', 'Id must be valid.').notEmpty().isObjectId();
+    updateToken: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name secret';
-
-        // Find client
-        Client.findOne({
-            _id: req.params.id
-        }, showValues, function (err, client) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!client) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('Client not found.'));
-            } else {
-                //  Encrypt
-                client.secret = client.generateSecret(client._id + ':' + client.name);
-
-                // Save client
-                client.save(function (err, clientSave) {
-                    if (err) {
-                        // Send error
-                        return next(err);
-                    } else {
-                        // Format client
-                        clientSave = {
-                            _id: clientSave._id,
-                            secret: clientSave.secret,
-                            name: clientSave.name
-                        };
-
-                        // Send result
-                        res.send(clientSave);
-                    }
-                });
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: true,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'path',
+                swaggerType: 'string',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create values to show in result
+            var showValues = 'name secret';
+
+            // Find client
+            Client.findOne({
+                _id: req.params.id
+            }, showValues, function (err, client) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (!client) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('Client not found.'));
+                } else {
+                    //  Encrypt
+                    client.secret = client.generateSecret(client._id + ':' + client.name);
+
+                    // Save client
+                    client.save(function (err, clientSave) {
+                        if (err) {
+                            // Send error
+                            return next(err);
+                        } else {
+                            // Format client
+                            clientSave = {
+                                _id: clientSave._id,
+                                secret: clientSave.secret,
+                                name: clientSave.name
+                            };
+
+                            // Send result
+                            res.send(clientSave);
+                        }
+                    });
+                }
+            });
+        }
     },
 
     //-----------------------------------------------------------------------------------
@@ -472,41 +575,56 @@ module.exports = {
      * @apiErrorStructure ClientNotFound
      * @apiErrorStructure InvalidArgument
      */
-    destroy: function (req, res, next) {
-        // Get params
-        req.check('id', 'Id must be valid.').notEmpty().isObjectId();
+    destroy: {
+        // Specifications for swagger
+        spec: {
+            summary: 'Return a list of users, filtered by parameters',
+            notes: 'Return a list of users, filtered by parameters notes',
+            nickname: 'getUsers',
+            produces: ['application/json'],
+            responseClass: 'User.model', // TODO
+            errorResponses: []
+        },
 
-        // Show errors if exists
-        var errors = req.validationErrors(false, true);
-        if (errors) {
-            return next(new restify.InvalidArgumentError(util.inspect(errors)));
-        }
-
-        // Create values to show in result
-        var showValues = 'name secret';
-
-        // Find client
-        Client.findOne({
-            _id: req.params.id
-        }, showValues, function (err, client) {
-            if (err) {
-                // Send error
-                return next(err);
-            } else if (!client) {
-                // Send empty error
-                return next(new restify.ResourceNotFoundError('Client not found.'));
-            } else {
-                // Delete client
-                client.remove(function (err, clientDel) {
-                    if (err) {
-                        // Send error
-                        return next(err);
-                    } else {
-                        // Send result
-                        res.send(clientDel);
-                    }
-                });
+        // Validations of params
+        validation: {
+            id: {
+                isRequired: true,
+                regex: '^[0-9a-fA-F]{24}$',
+                scope: 'path',
+                swaggerType: 'string',
+                description: ''
             }
-        });
+        },
+
+        // Action of function
+        action: function (req, res, next) {
+            // Create values to show in result
+            var showValues = 'name secret';
+
+            // Find client
+            Client.findOne({
+                _id: req.params.id
+            }, showValues, function (err, client) {
+                if (err) {
+                    // Send error
+                    return next(err);
+                } else if (!client) {
+                    // Send empty error
+                    return next(new restify.ResourceNotFoundError('Client not found.'));
+                } else {
+                    // Delete client
+                    client.remove(function (err, clientDel) {
+                        if (err) {
+                            // Send error
+                            return next(err);
+                        } else {
+                            // Send result
+                            res.send(clientDel);
+                        }
+                    });
+                }
+            });
+        }
     }
 };

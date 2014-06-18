@@ -4,9 +4,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    mongoosePaginate = require('mongoose-paginate'),
     Schema = mongoose.Schema,
     util = require('../lib/utils'),
-    scopes = require('../config/clientScopes');
+    scopes = require('../config/clientScopes'),
+
+    // Plugins
+    timestamps = require('mongoose-timestamp');
+require('mongoose-setter')(mongoose);
 
 // Client Key Schema
 var ClientSchema = new Schema({
@@ -14,7 +19,12 @@ var ClientSchema = new Schema({
         type: String,
         required: true,
         trim: true,
+        lowercase: true,
         unique: true
+    },
+    description: {
+        type: String,
+        trim: true
     },
     secret: {
         type: String,
@@ -23,15 +33,8 @@ var ClientSchema = new Schema({
     },
     scopes: {
         type: [String],
-        trim: true
-    },
-    created_at: {
-        type: Date,
-        trim: true
-    },
-    updated_at: {
-        type: Date,
-        trim: true
+        trim: true,
+        lowercase: true
     }
 });
 
@@ -39,6 +42,13 @@ var ClientSchema = new Schema({
 ClientSchema.index({
     name: 1
 });
+
+// Plugins
+ClientSchema.plugin(timestamps);
+ClientSchema.plugin(mongoosePaginate);
+
+// Paths
+ClientSchema.path('name').capitalize();
 
 // Validation
 ClientSchema.path('name').validate(function (name) {

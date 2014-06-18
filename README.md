@@ -1,8 +1,8 @@
 ## Elefrant JS Framework
 
-![Dependencies](https://david-dm.org/Elefrant/elefrant.png)
 [![Dependency Status](https://gemnasium.com/Elefrant/elefrant.svg)](https://gemnasium.com/Elefrant/elefrant)
 [![Build Status](https://travis-ci.org/Elefrant/elefrant.svg?branch=master)](https://travis-ci.org/Elefrant/elefrant)
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 Still Developing the framework
 

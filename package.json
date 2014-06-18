@@ -9,11 +9,11 @@
     "main": "api.js",
     "homepage": "http://www.elefrant.com",
     "bugs": {
-        "url": "http://git.13genius.com/meetkat/api/issues"
+        "url": "https://github.com/Elefrant/elefrant/issues"
     },
     "repository": {
         "type": "git",
-        "url": "http://git.13genius.com/meetkat/api.git"
+        "url": "git@github.com:Elefrant/elefrant.git"
     },
     "engines": {
         "node": "0.10.x",
@@ -36,12 +36,18 @@
         "async": "^0.9.x",
         "lodash": "^2.4.1",
         "underscore": "^1.6.0",
-        "socket.io": "~0.9.14",
+        "socket.io": "^1.x.x",
         "restify": "^2.8.x",
         "restify-oauth2": "~4.0.0",
+        "node-restify-swagger": "^0.1.x",
+        "node-restify-validation": "0.0.x",
+        "mongoose": ">= 3.8.x",
         "validator": "^3.12.0",
-        "mongoose": ">= 2.3.1",
+        "mongoose-paginate": ">= 2.2.0",
+        "elefrant-mongoose-validator": ">=0.1.0",
         "mongoose-validator": "~0.2.2",
+        "mongoose-setter": "^1.x.x",
+        "mongoose-timestamp": "^0.2.x",
         "bcrypt-nodejs": "~0.0.3",
         "redis": "0.10.x",
         "node-uuid": "~1.4.1",
@@ -51,13 +57,14 @@
         "apidoc": "~0.4.0",
         "grunt-cli": "^0.1.13",
         "grunt-contrib-clean": "^0.5.0",
+        "grunt-contrib-jshint": "^0.10.0",
+        "grunt-contrib-csslint": "^0.2.0",
         "grunt-concurrent": "^0.5.0",
-        "grunt-contrib-uglify": "^0.4.0",
         "grunt-contrib-watch": "^0.6.1",
         "grunt-apidoc": "~0.4.0",
         "grunt-env": "^0.4.1",
         "grunt-forever": "^0.4.0",
-        "grunt-nodemon": "0.2.1",
+        "grunt-github-version": "^0.x.x",
         "load-grunt-tasks": "^0.4.0",
         "time-grunt": "^0.3.1",
         "colors": "^0.6.2",
@@ -69,11 +76,14 @@
         "colors": "^0.6.2",
         "mocha": "^1.19.0",
         "grunt": "~0.4.2",
+        "grunt-contrib-clean": "^0.5.0",
         "grunt-contrib-jshint": "^0.10.0",
         "grunt-contrib-csslint": "^0.2.0",
         "grunt-mocha-test": "^0.11.x",
         "grunt-notify": "^0.3.0",
-        "grunt-docco": "^0.3.3"
+        "grunt-docco": "^0.3.3",
+        "grunt-nodemon": "0.2.1",
+        "grunt-github-version": "^0.x.x"
     },
     "license": "MIT",
     "readmeFilename": "README.md"

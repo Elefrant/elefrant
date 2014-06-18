@@ -10,8 +10,8 @@
     ],
     auth: true or false, // Optional
     scopes: [ // Optional
-        'read',
-        'write'
+        'scopeItem',
+        'scopeItem'
     ],
     action: api.v1.nameController.method
 },*/
@@ -20,7 +20,7 @@
 module.exports = function (api, config) {
     return [
         {
-            path: 'users/create',
+            path: '/users/create',
             method: 'POST',
             version: [
                 '1.0.0'
@@ -28,7 +28,7 @@ module.exports = function (api, config) {
             action: api.v1.userController.add
         },
         {
-            path: 'users/:id',
+            path: '/users/:id',
             method: 'GET',
             version: [
                 '1.0.0'
@@ -36,15 +36,15 @@ module.exports = function (api, config) {
             action: api.v1.userController.findByUser
         },
         {
-            path: 'users',
+            path: '/users',
             method: 'GET',
             version: [
-                '1.0.0'
+                '1.0.0',
             ],
             action: api.v1.userController.findAll
         },
         {
-            path: 'users/:id',
+            path: '/users/:id',
             method: 'PUT',
             version: [
                 '1.0.0'
@@ -52,7 +52,7 @@ module.exports = function (api, config) {
             action: api.v1.userController.update
         },
         {
-            path: 'users/:id',
+            path: '/users/:id',
             method: 'DELETE',
             version: [
                 '1.0.0'

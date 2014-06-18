@@ -39,8 +39,8 @@
               </a>
             
               
-              <a class="source" href="Database.html">
-                Database.js
+              <a class="source" href="Documentation.html">
+                Documentation.js
               </a>
             
               
@@ -81,6 +81,16 @@
               
               <a class="source" href="Throttle.html">
                 Throttle.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Seed.html">
+                Seed.js
               </a>
             
               
@@ -126,11 +136,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-pi">'use strict'</span>;
-
-<span class="hljs-comment">/**
- * Module dependencies.
- */</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-pi">'use strict'</span>;</pre></div></div>
             
         </li>
         
@@ -141,9 +147,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>var scopes = require(‘../config/clientScopes’);</p>
+              <p>Module dependencies.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> util = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../../lib/utils'</span>),
+    isAuth = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../../lib/config'</span>).getConfigValue(<span class="hljs-string">'oauth'</span>, <span class="hljs-string">'enable'</span>),
+    scopesList = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../../config/clientScopes'</span>);</pre></div></div>
             
         </li>
         
@@ -158,7 +168,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>module.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(allowScope)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> isAuthenticate = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(auth, scopes, allowScopes)</span> {</span></pre></div></div>
             
         </li>
         
@@ -184,21 +194,69 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>console.log(req.username);</p>
+              <p>Check if auth is enable and activate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!isAuth || !auth) {
+            <span class="hljs-keyword">return</span> next();
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Check if username exists</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!req.username) {
             <span class="hljs-keyword">return</span> res.sendUnauthorized();
-        }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Check if scopes from routes are in scope list</p>
 
-        <span class="hljs-comment">/*if (allowScope &amp;&amp; req.scopesGranted.indexOf('two') === -1) {
-            return res.sendUnauthorized();
-        }*/</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (allowScopes &amp;&amp; scopes &amp;&amp; !util.arrayInArray(scopesList, scopes)) {
+            <span class="hljs-keyword">return</span> res.BadMethodError();
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Check if request scopes are in client scopes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (allowScopes &amp;&amp; scopes &amp;&amp; !util.arrayInArray(scopes, req.scopesGranted)) {
+            <span class="hljs-keyword">return</span> res.sendUnauthorized();
+        }
 
         <span class="hljs-keyword">return</span> next();
     };
-};</pre></div></div>
+};
+exports.isAuthenticate = isAuthenticate;</pre></div></div>
             
         </li>
         

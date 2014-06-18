@@ -39,8 +39,8 @@
               </a>
             
               
-              <a class="source" href="Database.html">
-                Database.js
+              <a class="source" href="Documentation.html">
+                Documentation.js
               </a>
             
               
@@ -81,6 +81,16 @@
               
               <a class="source" href="Throttle.html">
                 Throttle.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Seed.html">
+                Seed.js
               </a>
             
               
@@ -143,6 +153,7 @@
  * 1. To validate parameters, use `req.check(param_name, [err_message])`
  *        e.g. req.check('param1').len(1, 6).isInt();
  *        e.g. req.checkHeader('referer').contains('mydomain.com');
+ *        e.g. req.checkBody('email', 'Email must be valid.').notEmpty().isEmail();
  *
  *    Each call to `check()` will throw an exception by default. To
  *    specify a custom err handler, use `req.onValidationError(errback)`
@@ -154,6 +165,13 @@
  *
  * 3. Done! Access your validated and sanitized paramaters through the
  *    `req.params` object
+ *
+ * 4. To get results of errors:
+ *
+ *      var errors = req.validationErrors(false, true);
+ *      if (errors) {
+ *          return next(new restify.InvalidArgumentError(util.inspect(errors)));
+ *      }
  */</span></pre></div></div>
             
         </li>

@@ -28,7 +28,7 @@ module.exports = function (api, config) {
             action: api.v1.helpController.status
         },
         {
-            path: 'help/status',
+            path: '/help/status',
             method: 'GET',
             version: [
                 '1.0.0'
@@ -36,7 +36,7 @@ module.exports = function (api, config) {
             action: api.v1.helpController.status
         },
         {
-            path: 'help/tos',
+            path: '/help/tos',
             method: 'GET',
             version: [
                 '1.0.0'
@@ -44,7 +44,7 @@ module.exports = function (api, config) {
             action: api.v1.helpController.tos
         },
         {
-            path: 'help/privacy',
+            path: '/help/privacy',
             method: 'GET',
             version: [
                 '1.0.0'
@@ -52,7 +52,7 @@ module.exports = function (api, config) {
             action: api.v1.helpController.privacy
         },
         {
-            path: 'help/configuration',
+            path: '/help/configuration',
             method: 'GET',
             version: [
                 '1.0.0'

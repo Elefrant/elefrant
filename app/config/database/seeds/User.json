@@ -1,0 +1,23 @@
+[
+    {
+        "name": "User Admin",
+        "email": "admin@admin.com",
+        "username": "useradmin",
+        "password": "elefrantadmin",
+        "roles": ["admin"]
+    },
+    {
+        "name": "User User",
+        "email": "user@user.com",
+        "username": "useruser",
+        "password": "elefrantuser",
+        "roles": ["user"]
+    },
+    {
+        "name": "User Developer",
+        "email": "dev@dev.com",
+        "username": "userdev",
+        "password": "elefrantdev",
+        "roles": ["developer"]
+    }
+]

@@ -39,8 +39,8 @@
               </a>
             
               
-              <a class="source" href="Database.html">
-                Database.js
+              <a class="source" href="Documentation.html">
+                Documentation.js
               </a>
             
               
@@ -81,6 +81,16 @@
               
               <a class="source" href="Throttle.html">
                 Throttle.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Seed.html">
+                Seed.js
               </a>
             
               
@@ -143,7 +153,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> models_path = config.system.root + <span class="hljs-string">'/models'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> models_path = config.system.rootApp + <span class="hljs-string">'/models'</span>;</pre></div></div>
             
         </li>
         
@@ -176,7 +186,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
             </div>
             
             <div class="content"><div class='highlight'><pre>    db.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err)</span> {</span>
-        <span class="hljs-keyword">if</span> (config.system.debug) {
+        <span class="hljs-keyword">if</span> (config.system.debug &amp;&amp; config.log) {
             config.log.error(<span class="hljs-string">'Error in mongoDb: %s'</span>, err);
         }
     });</pre></div></div>
@@ -194,7 +204,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/utils'</span>).walk(models_path, <span class="hljs-literal">null</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(path, filename)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">require</span>(<span class="hljs-string">'../../lib/utils'</span>).walk(models_path, <span class="hljs-literal">null</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(path, filename)</span> {</span></pre></div></div>
             
         </li>
         
@@ -209,7 +219,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (config.system.debug) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (config.system.debug &amp;&amp; config.log) {
             config.log.debug(<span class="hljs-string">'Model %s'</span>, filename);
         }
 

@@ -39,8 +39,8 @@
               </a>
             
               
-              <a class="source" href="Database.html">
-                Database.js
+              <a class="source" href="Documentation.html">
+                Documentation.js
               </a>
             
               
@@ -81,6 +81,16 @@
               
               <a class="source" href="Throttle.html">
                 Throttle.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Seed.html">
+                Seed.js
               </a>
             
               
@@ -141,13 +151,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> restify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'restify'</span>), <span class="hljs-comment">// Load server</span>
-    restifyValidator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./middleware/validator'</span>), <span class="hljs-comment">// Load validator</span>
-    fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>), <span class="hljs-comment">// Load  filesystem</span>
-    auditLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./AuditLogger'</span>),
-    throttle = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Throttle'</span>);
-
-module.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(config)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> restify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'restify'</span>), <span class="hljs-comment">// Load server</span></pre></div></div>
             
         </li>
         
@@ -157,6 +161,27 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>restifyValidator = require(‘./middleware/validator’), // Load validator
+restifyValidator = require(‘elefrant-request-validator’),</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    restifyValidator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-restify-validation'</span>), <span class="hljs-comment">// Route-side validator</span>
+    fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>), <span class="hljs-comment">// Load  filesystem</span>
+    auditLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./AuditLogger'</span>),
+    throttle = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Throttle'</span>);
+
+module.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(config)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Set up server</p>
 
@@ -172,11 +197,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Check if ssl is enable</p>
 
@@ -187,11 +212,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Get ssl key</p>
 
@@ -204,11 +229,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Get ssl cert</p>
 
@@ -222,11 +247,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Create server</p>
 
@@ -237,11 +262,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Trailing / characters</p>
 
@@ -252,11 +277,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Ensures that the server can respond to what the client asked for</p>
 
@@ -267,11 +292,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Parses out the Authorization header (HTTP Basic Auth and HTTP Signature schemes are supported)</p>
 
@@ -282,11 +307,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Parses out the HTTP Date header (if present) and checks for clock skew</p>
 
@@ -297,11 +322,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Parses the HTTP query string (i.e., /foo?id=bar&amp;name=mark)</p>
 
@@ -312,11 +337,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Logger with the current request</p>
 
@@ -327,11 +352,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>If the client sends an accept-encoding: gzip header, then the server will automatically gzip all response data</p>
 
@@ -342,11 +367,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Supports checking the query string for callback or jsonp and ensuring that the content-type is appropriately set if JSONP params are in place.</p>
 
@@ -357,11 +382,11 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Add CORS Support
 restify.CORS.ALLOW_HEADERS.push( ‘my-custom-header’ );
@@ -377,11 +402,11 @@ server.use(restify.CORS({ headers: [ ‘my-custom-header’ ], origins: [‘*’
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Blocks your chain on reading and parsing the HTTP request body</p>
 
@@ -394,11 +419,11 @@ server.use(restify.CORS({ headers: [ ‘my-custom-header’ ], origins: [‘*’
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Initialize server Oauth 2.0</p>
 
@@ -409,11 +434,11 @@ server.use(restify.CORS({ headers: [ ‘my-custom-header’ ], origins: [‘*’
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Allow rate limit for the server</p>
 
@@ -424,11 +449,11 @@ server.use(restify.CORS({ headers: [ ‘my-custom-header’ ], origins: [‘*’
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Handler that run before routing occurs</p>
 
@@ -442,30 +467,15 @@ server.use(restify.CORS({ headers: [ ‘my-custom-header’ ], origins: [‘*’
         </li>
         
         
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>TODO: Could be stats here</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>Allow to audit every record</p>
+              <p>TODO: Could be stats here</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    server.on(<span class="hljs-string">'after'</span>, auditLogger.logger(server, config));</pre></div></div>
             
         </li>
         
@@ -476,11 +486,29 @@ server.use(restify.CORS({ headers: [ ‘my-custom-header’ ], origins: [‘*’
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Add validator middleware to server</p>
+              <p>Allow to audit every record</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    server.use(restifyValidator);
+            <div class="content"><div class='highlight'><pre>    server.on(<span class="hljs-string">'after'</span>, auditLogger.logger(server, config));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Add validator middleware to server
+server.use(restifyValidator);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    server.use(restifyValidator.validationPlugin({
+        errorsAsArray: <span class="hljs-literal">false</span>
+    }));
 
     <span class="hljs-keyword">return</span> server;
 };</pre></div></div>

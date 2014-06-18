@@ -6,7 +6,7 @@ var _ = require('../lib/utils');
 module.exports = function (server, config) {
     // Load controllers
     var api = require('./Controller')(config),
-        authentication = require('./middleware/authentication')(config.oauth.allowScope);
+        auth = require('./middleware/authentication');
 
     // Paths
     var routes_path = config.system.rootApp + '/config/routes',
@@ -38,22 +38,18 @@ module.exports = function (server, config) {
 
         // Check if methods is in the list
         if (['get', 'post', 'put', 'del', 'patch'].indexOf(method) > -1) {
-            // Check if is an authorization route and is enable
-            if (config.oauth.enable && route.auth) {
-                // Create rout
-                server[method]({
-                    name: route.name,
-                    path: route.path,
-                    version: route.version
-                }, authentication, route.action);
-            } else {
-                // Create rout
-                server[method]({
-                    name: route.name,
-                    path: route.path,
-                    version: route.version
-                }, route.action);
-            }
+            // Create route
+            server[method]({
+                name: route.name,
+                url: route.path,
+                version: route.version,
+                swagger: route.action.spec || null, // Swagger doc
+                validation: route.action.validation || null, // Swagger doc and Validation
+                models: route.action.models || null, // Swagger doc
+            }, auth.isAuthenticate(route.auth, route.scopes, config.oauth.allowScopes), route.action.action);
         }
     }
+
+    // Generate documentation and routes
+    require('./Documentation')(server, config);
 };

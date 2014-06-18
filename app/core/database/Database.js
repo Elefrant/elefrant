@@ -12,7 +12,7 @@ module.exports = function (config, mongoose) {
 
     // Show error in connection
     db.on('error', function (err) {
-        if (config.system.debug) {
+        if (config.system.debug && config.log) {
             config.log.error('Error in mongoDb: %s', err);
         }
     });
@@ -20,7 +20,7 @@ module.exports = function (config, mongoose) {
     // Bootstrap models
     require('../../lib/utils').walk(models_path, null, function (path, filename) {
         // Show create models
-        if (config.system.debug) {
+        if (config.system.debug && config.log) {
             config.log.debug('Model %s', filename);
         }
 

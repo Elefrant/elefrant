@@ -112,40 +112,4 @@ module.exports = {
 
     //-----------------------------------------------------------------------------------
 
-    /**
-     * Description
-     * @api {post} /plan/:id Create a new plan
-     * @apiName NewPlan
-     * @apiGroup Plan
-     * @apiParam {Number} id Users unique ID.
-     * @apiSuccess {String} firstname Firstname of the User.
-     * @apiSuccess {String} lastname  Lastname of the User.
-     * @method add
-     * @param {} req
-     * @param {} res
-     * @return Literal
-     */
-    initial: function (req, res, next) {
-        var result = require('../../lib/utils').arrayInArray(['1', '2', '3', '4', '5'], ['1', '5']);
-
-        res.send(result);
-    },
-
-    secret: function (req, res, next) {
-
-        var response = {
-            'clients with a token': 'have access to this secret data: ' + req.customer,
-            _links: {
-                self: {
-                    href: '/secret'
-                },
-                parent: {
-                    href: '/'
-                }
-            }
-        };
-
-        //res.contentType = 'application/hal+json';
-        res.send(response);
-    }
 };

@@ -22,7 +22,7 @@ var walk = function (modulesPath, excludeDir, callback) {
     fs.readdirSync(modulesPath).forEach(function (file) {
         var newPath = path.join(modulesPath, file),
             stat = fs.statSync(newPath);
-        if (stat.isFile() && /(.*)\.(js|coffee)$/.test(file)) {
+        if (stat.isFile() && /(.*)\.(js|coffee|json)$/.test(file)) {
             callback(newPath, file);
         } else if (stat.isDirectory() && file !== excludeDir) {
             walk(newPath, excludeDir, callback);
@@ -40,7 +40,7 @@ var walkFile = function (modulesPath, excludeDir, callback) {
     fs.readdirSync(modulesPath).forEach(function (file) {
         var newPath = path.join(modulesPath, file),
             stat = fs.statSync(newPath);
-        if (stat.isFile() && /(.*)\.(js|coffee)$/.test(file)) {
+        if (stat.isFile() && /(.*)\.(js|coffee|json)$/.test(file)) {
             callback(newPath, file);
         }
     });
@@ -232,7 +232,7 @@ exports.objClone = objClone;
 /*
  * Collapse Object to Array
  * --------------------------
- * Try to callapse an object to an array
+ * Try to collapse an object to an array
  */
 var objectToArray = function (obj) {
     try {

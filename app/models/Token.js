@@ -4,9 +4,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    mongoosePaginate = require('mongoose-paginate'),
     Schema = mongoose.Schema,
     util = require('../lib/utils'),
-    scopes = require('../config/clientScopes');
+    scopes = require('../config/clientScopes'),
+
+    // Plugins
+    timestamps = require('mongoose-timestamp');
+require('mongoose-setter')(mongoose);
 
 // Token Key Schema
 var TokenSchema = new Schema({
@@ -28,14 +33,7 @@ var TokenSchema = new Schema({
     },
     ttl: {
         type: Number,
-        trim: true
-    },
-    created_at: {
-        type: Date,
-        trim: true
-    },
-    updated_at: {
-        type: Date,
+        min: [0, 'The value of `{PATH}` ({VALUE}) is beneath the limit ({MIN})'],
         trim: true
     }
 });
@@ -48,6 +46,10 @@ TokenSchema.index({
 TokenSchema.index({
     token: 1
 });
+
+// Plugins
+TokenSchema.plugin(timestamps);
+TokenSchema.plugin(mongoosePaginate);
 
 // Validation
 TokenSchema.path('customer').validate(function (customer) {

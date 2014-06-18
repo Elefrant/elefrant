@@ -4,37 +4,47 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    mongoosePaginate = require('mongoose-paginate'),
+    validate = require('elefrant-mongoose-validator').validate,
+    validatorSimple = require('validator'),
     Schema = mongoose.Schema,
-    restify = require('restify'),
-    util = require('../lib/utils')
-    /*,
-    validate = require('mongoose-validator').validate*/
-;
+    util = require('../lib/utils'),
+
+    // Plugins
+    timestamps = require('mongoose-timestamp');
+require('mongoose-setter')(mongoose);
+
 
 //User Schema
 var UserSchema = new Schema({
     name: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+
     },
     email: {
         type: String,
         required: true,
         trim: true,
         unique: true,
-        match: [/.+\@.+\..+/, 'Email address must be valid']
+        lowercase: true,
+        validate: [validate({
+            message: 'Email address must be valid'
+        }, 'isEmail')]
     },
     username: {
         type: String,
         required: true,
         trim: true,
         unique: true,
-        lowercase: true
+        lowercase: true,
+        validate: [validate({
+            message: 'Username should be between 3 and 20 characters'
+        }, 'len', 3, 20)]
     },
     hashed_password: {
         type: String,
-        required: true,
         trim: true
     },
     salt: {
@@ -46,16 +56,15 @@ var UserSchema = new Schema({
         type: Array,
         trim: true,
         required: true,
-        enum: ['user', 'developer', 'admin'],
+        lowercase: true,
+        validate: [validate({
+            message: 'Role must be user, developer or admin'
+        }, 'isIn', ['user', 'developer', 'admin'])],
         default: ['user']
     },
-    created_at: {
-        type: Date,
-        trim: true
-    },
-    updated_at: {
-        type: Date,
-        trim: true
+    settings: {
+        type: Schema.Types.ObjectId,
+        ref: 'Setting'
     }
 });
 
@@ -80,37 +89,29 @@ UserSchema
         return this._password;
     });
 
+// Plugins
+UserSchema.plugin(timestamps);
+UserSchema.plugin(mongoosePaginate);
+
+// Paths
+UserSchema.path('name').capitalize();
+UserSchema.path('email').spaceless();
+
 // Validation
-UserSchema.path('name').validate(function (name) {
-    return util.validatePresenceOf(name);
-}, 'Name cannot be blank');
+UserSchema.path('hashed_password').validate(function (password) {
+    if (this.isNew && !util.validatePresenceOf(this.password)) {
+        this.invalidate('password', 'Password is required', this.password, true);
+    }
 
-UserSchema.path('email').validate(function (email) {
-    return util.validatePresenceOf(email);
-}, 'Email cannot be blank');
-
-UserSchema.path('username').validate(function (username) {
-    return util.validatePresenceOf(username);
-}, 'Username cannot be blank');
+    if (util.validatePresenceOf(this.password) && !validatorSimple.isLength(this.password, '6', '25')) {
+        this.invalidate('password', 'Password must be between 6 and 25 characters', this.password);
+    }
+}, 'null');
 
 //Pre-save hook
 UserSchema.pre('save', function (next) {
-    // Update updated time
-    var now = new Date();
-    this.updated_at = now;
-
     // Execute when is new
     if (!this.isNew) return next();
-
-    // password not blank when creating, otherwise skip
-    if (!util.validatePresenceOf(this.password)) {
-        next(new restify.MissingParameterError('Invalid password'));
-    }
-
-    // Create at date
-    if (!this.created_at) {
-        this.created_at = now;
-    }
 
     next();
 });
@@ -152,6 +153,42 @@ UserSchema.statics = {
         this.find({
             username: new RegExp('^' + username + '$', 'i')
         }, callback);
+    }
+};
+
+// Swagger models
+UserSchema.statics.swaggerDef = {
+    User: {
+        id: 'User',
+        properties: {
+            id: {
+                type: 'string'
+            },
+            name: {
+                type: 'string',
+                dataType: 'string',
+                name: 'name'
+            },
+            email: {
+                type: 'string',
+                dataType: 'string',
+                name: 'email'
+            },
+            username: {
+                type: 'string',
+                dataType: 'string',
+                name: 'username'
+            },
+            roles: {
+                type: 'array',
+                dataType: 'array',
+                name: 'roles',
+                allowableValues: {
+                    valueType: 'LIST',
+                    values: ['user', 'developer', 'admin']
+                }
+            }
+        }
     }
 };
 

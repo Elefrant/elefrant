@@ -14,6 +14,8 @@ var fs = require('fs');
  * Get Property
  * --------------------------
  * Get the request property from file
+ *
+ * Example: requiere('./lib/config').getConfigValue('system', 'root');
  */
 var getConfigValue = function (file, value) {
     // Paths

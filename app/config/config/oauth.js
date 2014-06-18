@@ -44,5 +44,5 @@ module.exports = {
      * Allow to use scope permission for clients
      * Find in config/clientScopes.js
      */
-    allowScopes: true
+    allowScopes: false
 };

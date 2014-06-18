@@ -16,12 +16,12 @@ module.exports = {
      * --------------------------
      * Parent folder where your api doc is going to be generate.
      */
-    dest: 'apiDoc/',
+    dest: 'apiDoc/docs/',
 
     /*
      * Template
      * --------------------------
      * Select the templete folder to generate apiDoc
      */
-    template: 'templates/docs/basic'
+    template: 'templates/docs/apidoc/basic'
 };

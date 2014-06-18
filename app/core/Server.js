@@ -2,7 +2,7 @@
 
 // Module dependencies.
 var restify = require('restify'), // Load server
-    restifyValidator = require('./middleware/validator'), // Load validator
+    restifyValidator = require('node-restify-validation'), // Route-side validator
     fs = require('fs'), // Load  filesystem
     auditLogger = require('./AuditLogger'),
     throttle = require('./Throttle');
@@ -87,7 +87,10 @@ module.exports = function (config) {
     server.on('after', auditLogger.logger(server, config));
 
     //Add validator middleware to server
-    server.use(restifyValidator);
+    //server.use(restifyValidator);
+    server.use(restifyValidator.validationPlugin({
+        errorsAsArray: false
+    }));
 
     return server;
 };

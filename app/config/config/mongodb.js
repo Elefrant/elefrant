@@ -23,5 +23,5 @@ module.exports = {
      * --------------------------
      * Name of database
      */
-    database: 'dnapijs-dev'
+    database: 'elefrant'
 };

@@ -12,7 +12,7 @@ if (require('./app/lib/config').getConfigValue('newrelic', 'enable')) {
 }
 
 // Show master info
-console.log('Creating Master'.blue);
+console.log('[Cluster] Creating Master...');
 
 // Create a master server
 cluster.setupMaster({
@@ -20,24 +20,24 @@ cluster.setupMaster({
 });
 
 //Show master info in console
-console.log('Master created'.underline.green);
+console.log('[Cluster] Master created'.green);
 console.log('- Pid: %d'.grey, process.pid);
 console.log('- Time: %s'.grey, datefmt(new Date(), 'ddd, dd mmm yyyy hh:MM:ss Z'));
 
 // Fork workers
-console.error('Creating Workers'.blue);
+console.error('[Cluster] Creating Workers...');
 for (var i = 0; i < numCPUs; i++) {
     cluster.fork();
 }
 
 // Event when listening worker
 cluster.on('listening', function (worker, address) {
-    console.log('A worker is now connected to %s:%d'.green.inverse, address.address, address.port);
+    console.log('[Cluster] A worker is now connected to %s:%d'.green, address.address, address.port);
 });
 
 // Event when exit worker
 cluster.on('exit', function (worker, code, signal) {
-    console.log('worker %d died (%s). restarting...'.red.inverse, worker.process.pid, signal || code);
+    console.log('[Cluster] worker %d died (%s). restarting...'.red, worker.process.pid, signal || code);
 
     // Auto-restart worker
     cluster.fork();
@@ -45,10 +45,10 @@ cluster.on('exit', function (worker, code, signal) {
 
 // Event when disconnect worker
 cluster.on('disconnect', function (worker) {
-    console.log('The worker #%s has disconnected'.yellow.inverse, worker.id);
+    console.log('[Cluster] The worker #%s has disconnected'.yellow, worker.id);
 });
 
 // Event when death worker
 cluster.on('death', function (worker) {
-    console.log('The worker #%s is death'.red.inverse, worker.id);
+    console.log('[Cluster] The worker #%s is death'.red, worker.id);
 });

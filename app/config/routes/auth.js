@@ -23,25 +23,5 @@ module.exports = function (api, config) {
          *
          * { path: 'oauth2/token' }
          * */
-        {
-            path: '/test',
-            method: 'GET',
-            version: [
-                '1.0.0'
-            ],
-            action: api.v1.authController.initial
-        },
-        {
-            path: 'secret',
-            method: 'GET',
-            version: [
-                '1.0.0'
-            ],
-            auth: true,
-            scopes: [
-                'read'
-            ],
-            action: api.v1.authController.secret
-        }
     ];
 };

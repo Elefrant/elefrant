@@ -39,8 +39,8 @@
               </a>
             
               
-              <a class="source" href="Database.html">
-                Database.js
+              <a class="source" href="Documentation.html">
+                Documentation.js
               </a>
             
               
@@ -81,6 +81,16 @@
               
               <a class="source" href="Throttle.html">
                 Throttle.js
+              </a>
+            
+              
+              <a class="source" href="Database.html">
+                Database.js
+              </a>
+            
+              
+              <a class="source" href="Seed.html">
+                Seed.js
               </a>
             
               
@@ -141,7 +151,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>), <span class="hljs-comment">// Load mongodb handler</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose-paginate'</span>), <span class="hljs-comment">// Load mongodb handler</span>
     _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'underscore'</span>), <span class="hljs-comment">// Load underscore</span>
     uuid = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-uuid'</span>), <span class="hljs-comment">// Load uuid module</span>
     Client = mongoose.model(<span class="hljs-string">'Client'</span>), <span class="hljs-comment">// Load Clients app</span>
@@ -704,7 +714,7 @@ we can look it up later.</p>
             
             <div class="content"><div class='highlight'><pre>                            <span class="hljs-keyword">if</span> (isExpireTime) {
                                 <span class="hljs-keyword">var</span> now = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(),
-                                    updated = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(authToken.updated_at),
+                                    updated = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(authToken.updatedAt),
                                     expire_time = updated.setSeconds(updated.getSeconds() + config.oauth.tokenExpirationTime);</pre></div></div>
             
         </li>

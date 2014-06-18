@@ -21,14 +21,14 @@ module.exports = {
     /*
      * Host
      * --------------------------
-     * Host of the main node server (You can chaange via CLI)
+     * Host of the main node server (You can change via CLI)
      */
     host: 'localhost',
 
     /*
      * Port
      * --------------------------
-     * Port of mainnode server (You can chaange via CLI
+     * Port of mainnode server (You can change via CLI
      */
     port: '3100'
 };

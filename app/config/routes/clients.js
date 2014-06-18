@@ -20,7 +20,7 @@
 module.exports = function (api, config) {
     return [
         {
-            path: 'clients/create',
+            path: '/clients/create',
             method: 'POST',
             version: [
                 '1.0.0'
@@ -28,7 +28,7 @@ module.exports = function (api, config) {
             action: api.v1.clientController.add
         },
         {
-            path: 'clients/:id',
+            path: '/clients/:id',
             method: 'GET',
             version: [
                 '1.0.0'
@@ -36,7 +36,7 @@ module.exports = function (api, config) {
             action: api.v1.clientController.findByUser
         },
         {
-            path: 'clients',
+            path: '/clients',
             method: 'GET',
             version: [
                 '1.0.0'
@@ -44,7 +44,7 @@ module.exports = function (api, config) {
             action: api.v1.clientController.findAll
         },
         {
-            path: 'clients/:id',
+            path: '/clients/:id',
             method: 'PUT',
             version: [
                 '1.0.0'
@@ -52,7 +52,7 @@ module.exports = function (api, config) {
             action: api.v1.clientController.update
         },
         {
-            path: 'clients/:id/new_token',
+            path: '/clients/:id/new_token',
             method: 'PUT',
             version: [
                 '1.0.0'
@@ -60,7 +60,7 @@ module.exports = function (api, config) {
             action: api.v1.clientController.updateToken
         },
         {
-            path: 'clients/:id',
+            path: '/clients/:id',
             method: 'DELETE',
             version: [
                 '1.0.0'
