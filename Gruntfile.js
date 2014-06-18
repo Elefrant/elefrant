@@ -99,8 +99,8 @@ module.exports = function (grunt) {
         github_version: {
             all: {
                 options: {
-                    username: 'marsanla',
-                    repository: 'grunt-github-version',
+                    username: 'Elefrant',
+                    repository: 'elefrant',
                     version: pkg.elefrant
                 }
             }
