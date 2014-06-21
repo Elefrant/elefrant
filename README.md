@@ -12,7 +12,7 @@ Documentation for the entire framework can be found on the [Elefrant website](ht
 
 ### Contributing To Elefrant
 
-**All issues and pull requests should be filed on the [elefrant/framework](http://github.com/elefrant/framework) repository.**
+**All issues and pull requests should be filed on the [develop branch](https://github.com/Elefrant/elefrant/tree/develop) repository.**
 
 ### License
 
