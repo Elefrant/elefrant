@@ -5,7 +5,7 @@ require('colors');
 
 // Load config file
 var config = require('../Config')(),
-    mongoose = require('mongoose-paginate'),
+    mongoose = require('mongoose'),
     seeds_path = config.system.rootApp + '/config/database/seeds',
     seeds_models = {};
 
