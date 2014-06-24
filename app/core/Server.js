@@ -83,6 +83,9 @@ module.exports = function (config) {
 
     // TODO: Could be stats here
 
+    // Allow cache
+    require('./Cache')(config, server);
+
     // Allow to audit every record
     server.on('after', auditLogger.logger(server, config));
 

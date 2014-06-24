@@ -358,6 +358,7 @@ module.exports = {
                         }
                     };
                     res.send(result);
+                    next();
                 }
             }, options);
         }
