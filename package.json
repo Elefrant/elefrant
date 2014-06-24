@@ -37,6 +37,7 @@
         "lodash": "^2.4.x",
         "underscore": "^1.6.x",
         "socket.io": "^1.x.x",
+        "mongoosastic": ">=0.2.2",
         "restify": "^2.8.x",
         "restify-oauth2": "~4.0.x",
         "node-restify-swagger": "^0.1.x",

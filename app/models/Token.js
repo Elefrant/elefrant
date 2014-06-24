@@ -5,6 +5,7 @@
  */
 var mongoose = require('mongoose'),
     mongoosePaginate = require('mongoose-paginate'),
+    //mongoosastic = require('mongoosastic'),
     Schema = mongoose.Schema,
     util = require('../lib/utils'),
     scopes = require('../config/clientScopes'),
@@ -19,13 +20,16 @@ var TokenSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true
+        unique: true,
+        //es_indexed: true
     },
     token: {
         type: String,
         required: true,
         trim: true,
-        unique: true
+        unique: true,
+        //es_boost: 2.0,
+        //es_indexed: true
     },
     scopes: {
         type: [String],
@@ -46,10 +50,6 @@ TokenSchema.index({
 TokenSchema.index({
     token: 1
 });
-
-// Plugins
-TokenSchema.plugin(timestamps);
-TokenSchema.plugin(mongoosePaginate);
 
 // Validation
 TokenSchema.path('customer').validate(function (customer) {
@@ -104,5 +104,21 @@ TokenSchema.statics = {
 
 };
 
+// Plugins
+TokenSchema.plugin(timestamps);
+TokenSchema.plugin(mongoosePaginate);
+
+// Elasticsearch plugin
+/*TokenSchema.plugin(mongoosastic, {
+    hydrate: true
+});*/
+
 // Create Model
 mongoose.model('Token', TokenSchema);
+//var Token = mongoose.model('Token', TokenSchema);
+
+// Sync collection in elasticsearch
+//Token.synchronize();
+
+// Elasticsearch map
+//Token.createMapping();

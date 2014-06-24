@@ -5,6 +5,7 @@
  */
 var mongoose = require('mongoose'),
     mongoosePaginate = require('mongoose-paginate'),
+    //mongoosastic = require('mongoosastic'),
     validate = require('elefrant-mongoose-validator').validate,
     validatorSimple = require('validator'),
     Schema = mongoose.Schema,
@@ -21,7 +22,7 @@ var UserSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-
+        //es_indexed: true
     },
     email: {
         type: String,
@@ -31,7 +32,8 @@ var UserSchema = new Schema({
         lowercase: true,
         validate: [validate({
             message: 'Email address must be valid'
-        }, 'isEmail')]
+        }, 'isEmail')],
+        //es_indexed: true
     },
     username: {
         type: String,
@@ -41,7 +43,9 @@ var UserSchema = new Schema({
         lowercase: true,
         validate: [validate({
             message: 'Username should be between 3 and 20 characters'
-        }, 'len', 3, 20)]
+        }, 'len', 3, 20)],
+        //es_boost: 2.0,
+        //es_indexed: true
     },
     hashed_password: {
         type: String,
@@ -88,10 +92,6 @@ UserSchema
     .get(function () {
         return this._password;
     });
-
-// Plugins
-UserSchema.plugin(timestamps);
-UserSchema.plugin(mongoosePaginate);
 
 // Paths
 UserSchema.path('name').capitalize();
@@ -192,5 +192,21 @@ UserSchema.statics.swaggerDef = {
     }
 };
 
+// Plugins
+UserSchema.plugin(timestamps);
+UserSchema.plugin(mongoosePaginate);
+
+// Elasticsearch plugin
+/*UserSchema.plugin(mongoosastic, {
+    hydrate: true
+});*/
+
 // Create Model
 mongoose.model('User', UserSchema);
+//var User = mongoose.model('User', UserSchema);
+
+// Sync collection in elasticsearch
+//User.synchronize();
+
+// Elasticsearch map
+//User.createMapping();

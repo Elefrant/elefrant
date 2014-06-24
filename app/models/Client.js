@@ -5,6 +5,7 @@
  */
 var mongoose = require('mongoose'),
     mongoosePaginate = require('mongoose-paginate'),
+    //mongoosastic = require('mongoosastic'),
     Schema = mongoose.Schema,
     util = require('../lib/utils'),
     scopes = require('../config/clientScopes'),
@@ -20,7 +21,8 @@ var ClientSchema = new Schema({
         required: true,
         trim: true,
         lowercase: true,
-        unique: true
+        unique: true,
+        //es_indexed: true
     },
     description: {
         type: String,
@@ -42,10 +44,6 @@ var ClientSchema = new Schema({
 ClientSchema.index({
     name: 1
 });
-
-// Plugins
-ClientSchema.plugin(timestamps);
-ClientSchema.plugin(mongoosePaginate);
 
 // Paths
 ClientSchema.path('name').capitalize();
@@ -96,5 +94,21 @@ ClientSchema.statics = {
 
 };
 
+// Plugins
+ClientSchema.plugin(timestamps);
+ClientSchema.plugin(mongoosePaginate);
+
+// Elasticsearch plugin
+/*ClientSchema.plugin(mongoosastic, {
+    hydrate: true
+});*/
+
 // Create Model
 mongoose.model('Client', ClientSchema);
+//var Client = mongoose.model('Client', ClientSchema);
+
+// Sync collection in elasticsearch
+//Client.synchronize();
+
+// Elasticsearch map
+//Client.createMapping();
