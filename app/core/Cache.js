@@ -15,7 +15,7 @@ module.exports = function (config, server) {
         redisCache.config({
             redisPort: config.redis.port,
             redisHost: config.redis.host,
-            redisOptions: {}, //optional
+            redisOptions: config.redis.options,
             ttl: config.cache.ttl
         });
 

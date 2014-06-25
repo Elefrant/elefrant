@@ -3,9 +3,10 @@
 // Module dependencies.
 var restify = require('restify'), // Load server
     restifyValidator = require('node-restify-validation'), // Route-side validator
+    restifyThrottle = require('./middleware/throttle'), // Throttle rate limit validator
+    restifyAuthentication = require('./middleware/authentication'), // Authentication validator
     fs = require('fs'), // Load  filesystem
-    auditLogger = require('./AuditLogger'),
-    throttle = require('./Throttle');
+    auditLogger = require('./AuditLogger');
 
 module.exports = function (config) {
     // Set up server
@@ -72,9 +73,6 @@ module.exports = function (config) {
     // Initialize server Oauth 2.0
     require('./ServerOauth')(config, server);
 
-    // Allow rate limit for the server
-    server.use(throttle.throttle(server, restify, config));
-
     // Handler that run before routing occurs
     server.pre(function (req, res, next) {
         req.headers.accept = 'application/json'; // screw you client!
@@ -83,6 +81,12 @@ module.exports = function (config) {
 
     // TODO: Could be stats here
 
+    // Authentication validation
+    server.use(restifyAuthentication.authenticatePlugin(config));
+
+    // Allow throttle (rate limit)
+    server.use(restifyThrottle.throttlePlugin(config));
+
     // Allow cache
     require('./Cache')(config, server);
 
@@ -90,7 +94,6 @@ module.exports = function (config) {
     server.on('after', auditLogger.logger(server, config));
 
     //Add validator middleware to server
-    //server.use(restifyValidator);
     server.use(restifyValidator.validationPlugin({
         errorsAsArray: false
     }));

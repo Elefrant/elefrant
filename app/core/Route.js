@@ -5,8 +5,7 @@ var _ = require('../lib/utils');
 
 module.exports = function (server, config) {
     // Load controllers
-    var api = require('./Controller')(config),
-        auth = require('./middleware/authentication');
+    var api = require('./Controller')(config);
 
     // Paths
     var routes_path = config.system.rootApp + '/config/routes',
@@ -43,10 +42,13 @@ module.exports = function (server, config) {
                 name: route.name,
                 url: route.path,
                 version: route.version,
+                auth: route.auth || null, // Check oauth2
+                scopes: route.scopes || null, // Scopes allowed in route
                 swagger: route.action.spec || null, // Swagger doc
                 validation: route.action.validation || null, // Swagger doc and Validation
                 models: route.action.models || null, // Swagger doc
-            }, auth.isAuthenticate(route.auth, route.scopes, config.oauth.allowScopes), route.action.action);
+                throttle: route.throttle || null, // Allow rate limit
+            }, route.action.action);
         }
     }
 

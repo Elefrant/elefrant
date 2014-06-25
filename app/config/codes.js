@@ -96,7 +96,7 @@ module.exports = {
     },
     429: {
         code: 'Too Many Requests',
-        description: 'The reequest cannot be served due to the application\'s rate limit having been exhausted for the resource.'
+        description: 'The request cannot be served due to the application\'s rate limit having been exhausted for the resource.'
     },
     500: {
         code: 'Internal Server Error',

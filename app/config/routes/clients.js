@@ -13,6 +13,7 @@
         'read',
         'write'
     ],
+    throttle: true, // Control rate limit
     action: api.v1.nameController.method
 },*/
 

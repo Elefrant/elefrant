@@ -5,32 +5,39 @@
  */
 module.exports = {
     /*
-     * Enable Throttle
+     * Global Throttle
      * --------------------------
-     * Enable Throttle limit
+     * True to enable for entired system, or false to define rate limit in each router
      */
-    enable: true,
+    global: false,
 
     /*
      * Burst
      * --------------------------
-     * The number allowed to burst to in a time window
+     * Allow a maximum burst of n actions per time window
      * [0]: Unlimited
      */
-    burst: 1,
+    burst: 0,
 
     /*
      * Rate
      * --------------------------
-     * Steady state number of requests/second to allow
+     * Replenish actions at n per time window
      * [0]: Unlimited
      */
-    rate: 1,
+    rate: 0,
+
+    /*
+     * Window
+     * --------------------------
+     * The time window in milliseconds to measure burst and rate acts
+     */
+    window: 60000,
 
     /*
      * Type
      * --------------------------
-     * Select type of element to associate with the rate limit
+     * Select type of element to associate with the rate limit. Only when global
      * [ip]: Do throttling on a /32 (source IP)
      * [xff]: Do throttling on a /32 (X-Forwarded-For)
      * [username]: Do throttling on (req.username)
@@ -43,5 +50,12 @@ module.exports = {
      * Number of seconds to expire untouched entries
      * [0]: Unlimited
      */
-    ttl: 300,
+    ttl: 3600,
+
+    /*
+     * Prefix
+     * --------------------------
+     * Prefix for redis
+     */
+    prefix: 'throttle',
 };

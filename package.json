@@ -67,6 +67,7 @@
         "restify": "^2.8.x",
         "restify-oauth2": "~4.0.x",
         "socket.io": "^1.x.x",
+        "tokenthrottle-redis": "^1.1.0",
         "underscore": "^1.6.x",
         "time-grunt": "^0.3.x",
         "validator": "^3.12.x"

@@ -17,4 +17,9 @@
  *      }
  *  }
  */
-module.exports = {};
+module.exports = {
+    '127.0.0.1': {
+        rate: 0,
+        burst: 0
+    }
+};

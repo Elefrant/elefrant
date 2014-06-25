@@ -1,35 +1,36 @@
 'use strict';
 
-// Module dependencies.
-var util = require('../../lib/utils'),
-    isAuth = require('../../lib/config').getConfigValue('oauth', 'enable'),
+// Load modules
+var restify = require('restify'),
+    util = require('../../lib/utils'),
     scopesList = require('../../config/clientScopes');
 
-// Export module
-var isAuthenticate = function (auth, scopes, allowScopes) {
-    // Return check auth function
+module.exports.authenticatePlugin = function (config) {
     return function (req, res, next) {
+        // Check if throttle exists
+        var authModel = req.route ? req.route.auth : undefined,
+            scopesModel = req.route ? req.route.scopes : undefined;
+
         // Check if auth is enable and activate
-        if (!isAuth || !auth) {
+        if (!config.oauth.enable || !authModel) {
             return next();
         }
 
         // Check if username exists
         if (!req.username) {
-            return res.sendUnauthorized();
+            return next(new restify.NotAuthorizedError());
         }
 
         // Check if scopes from routes are in scope list
-        if (allowScopes && scopes && !util.arrayInArray(scopesList, scopes)) {
-            return res.BadMethodError();
+        if (config.oauth.allowScopes && scopesModel && !util.arrayInArray(scopesList, scopesModel)) {
+            return next(new restify.InternalError('Scopes are not in api.'));
         }
 
         // Check if request scopes are in client scopes
-        if (allowScopes && scopes && !util.arrayInArray(scopes, req.scopesGranted)) {
-            return res.sendUnauthorized();
+        if (config.oauth.allowScopes && scopesModel && !util.arrayInArray(scopesModel, req.scopesGranted)) {
+            return next(new restify.NotAuthorizedError());
         }
 
-        return next();
+        next();
     };
 };
-exports.isAuthenticate = isAuthenticate;

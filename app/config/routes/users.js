@@ -13,6 +13,7 @@
         'scopeItem',
         'scopeItem'
     ],
+    throttle: true, // Control rate limit
     action: api.v1.nameController.method
 },*/
 
@@ -41,6 +42,8 @@ module.exports = function (api, config) {
             version: [
                 '1.0.0',
             ],
+            //auth: true,
+            throttle: true,
             action: api.v1.userController.findAll
         },
         {
