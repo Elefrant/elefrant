@@ -9,16 +9,25 @@ module.exports = {
      * --------------------------
      * Enable statistics
      */
-    enable: false,
+    enable: true,
 
     /*
      * Type
      * --------------------------
      * Select built-in or 3rd-party stats system
      *
-     * [elefstats]: Build-in system
+     * [elefstats]: Build-in system (In progress)
      * [analityc]: Google analitycs
-     * [piwik]: Piwik
+     * [piwik]: Piwik (In progress)
      */
-    type: 'elefstats'
+    type: 'analityc',
+
+    /*
+     * Code
+     * --------------------------
+     * Enter the code to follow stats.
+     * Example:
+     *  UA-XXXXXXXX-1, for google analitycs
+     */
+    code: 'UA-52295930-1'
 };

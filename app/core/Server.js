@@ -79,8 +79,6 @@ module.exports = function (config) {
         return next();
     });
 
-    // TODO: Could be stats here
-
     // Authentication validation
     server.use(restifyAuthentication.authenticatePlugin(config));
 
@@ -90,13 +88,16 @@ module.exports = function (config) {
     // Allow cache
     require('./Cache')(config, server);
 
-    // Allow to audit every record
-    server.on('after', auditLogger.logger(server, config));
-
     //Add validator middleware to server
     server.use(restifyValidator.validationPlugin({
         errorsAsArray: false
     }));
+
+    // Allow to audit every record
+    server.on('after', auditLogger.logger(server, config));
+
+    // Allow stats
+    require('./Stats')(config, server);
 
     return server;
 };
