@@ -66,6 +66,7 @@ module.exports = {
 
             // Send status
             res.send(status);
+            next();
         }
     },
 
@@ -102,6 +103,7 @@ module.exports = {
 
             // Send tos
             res.send(tos);
+            next();
         }
     },
 
@@ -138,6 +140,7 @@ module.exports = {
 
             // Send privacy
             res.send(privacy);
+            next();
         }
     },
 
@@ -174,6 +177,7 @@ module.exports = {
 
             // Send configuration
             res.send(configuration);
+            next();
         }
     }
 };

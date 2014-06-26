@@ -131,6 +131,7 @@ module.exports = {
 
                     // Send result
                     res.send(client);
+                    next();
                 }
             });
         }
@@ -261,6 +262,7 @@ module.exports = {
                         }
                     };
                     res.send(result);
+                    next();
                 }
             }, options);
         }
@@ -339,6 +341,7 @@ module.exports = {
                 } else {
                     // Send result
                     res.send(client);
+                    next();
                 }
             });
         }
@@ -439,6 +442,7 @@ module.exports = {
 
                             // Send result
                             res.send(clientSave);
+                            next();
                         }
                     });
                 }
@@ -535,6 +539,7 @@ module.exports = {
 
                             // Send result
                             res.send(clientSave);
+                            next();
                         }
                     });
                 }
@@ -621,6 +626,7 @@ module.exports = {
                         } else {
                             // Send result
                             res.send(clientDel);
+                            next();
                         }
                     });
                 }

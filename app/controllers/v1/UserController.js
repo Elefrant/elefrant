@@ -219,6 +219,7 @@ module.exports = {
 
                     // Send result
                     res.send(user);
+                    next();
                 }
             });
         }
@@ -450,6 +451,7 @@ module.exports = {
                 } else {
                     // Send result
                     res.send(user);
+                    next();
                 }
             });
         }
@@ -576,6 +578,7 @@ module.exports = {
 
                             // Send result
                             res.send(userSave);
+                            next();
                         }
                     });
                 }
@@ -666,6 +669,7 @@ module.exports = {
                         } else {
                             // Send result
                             res.send(userDel);
+                            next();
                         }
                     });
                 }
