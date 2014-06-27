@@ -1,5 +1,8 @@
 'use strict';
 
+// Modules dependencies
+var join = require('path').join;
+
 // Path for files
 var paths = {
     js: [
@@ -23,6 +26,9 @@ module.exports = function (grunt) {
     }
 
     var pkg = grunt.file.readJSON('package.json');
+
+    // Create folders
+    grunt.file.mkdir(join(config.system.root, 'logs'));
 
     grunt.initConfig({
         pkg: pkg,
