@@ -61,6 +61,7 @@
         "mongoose-timestamp": "^0.2.x",
         "newrelic": "^1.7.x",
         "nodealytics": ">=0.0.6",
+        "nodetime": ">=0.8.0",
         "node-restify-swagger": "^0.1.x",
         "node-restify-validation": "0.0.x",
         "node-uuid": "~1.4.x",
@@ -74,14 +75,14 @@
         "validator": "^3.12.x"
     },
     "devDependencies": {
-        "should": "^4.x",
-        "supertest": "^0.13.x",
-        "mocha": "^1.19.x",
         "grunt": "~0.4.x",
         "grunt-docco": "^0.3.x",
         "grunt-mocha-test": "^0.11.x",
         "grunt-notify": "^0.3.x",
-        "grunt-nodemon": "0.2.x"
+        "grunt-nodemon": "0.2.x",
+        "mocha": "^1.19.x",
+        "should": "^4.x",
+        "supertest": "^0.13.x"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
