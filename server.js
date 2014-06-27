@@ -10,6 +10,11 @@ if (config.newrelic.enable) {
     require('newrelic');
 }
 
+require('nodetime').profile({
+    accountKey: 'f19f35d7e48f61d908ec621cc0f653821682db78',
+    appName: 'Elefrant'
+});
+
 // Add logger to config object
 config.log = logger.logger(config);
 

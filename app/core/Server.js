@@ -71,22 +71,35 @@ module.exports = function (config) {
     }));
 
     // Initialize server Oauth 2.0
-    require('./ServerOauth')(config, server);
+    if (config.oauth.enable) {
+        require('./ServerOauth')(config, server);
+    }
 
     // Handler that run before routing occurs
-    server.pre(function (req, res, next) {
+    /*server.pre(function (req, res, next) {
         req.headers.accept = 'application/json'; // screw you client!
         return next();
-    });
+    });*/
 
     // Authentication validation
-    server.use(restifyAuthentication.authenticatePlugin(config));
+    if (config.oauth.enable) {
+        server.use(restifyAuthentication.authenticatePlugin(config));
+    }
 
     // Allow throttle (rate limit)
-    server.use(restifyThrottle.throttlePlugin(config));
+    if (config.throttle.enable) {
+        server.use(restifyThrottle.throttlePlugin(config));
+    }
+
+    // Allow stats
+    if (config.stats.enable) {
+        require('./Stats')(config, server);
+    }
 
     // Allow cache
-    require('./Cache')(config, server);
+    if (config.cache.enable) {
+        require('./Cache')(config, server);
+    }
 
     //Add validator middleware to server
     server.use(restifyValidator.validationPlugin({
@@ -94,10 +107,9 @@ module.exports = function (config) {
     }));
 
     // Allow to audit every record
-    server.on('after', auditLogger.logger(server, config));
-
-    // Allow stats
-    require('./Stats')(config, server);
+    if (config.audit.enable) {
+        server.on('after', auditLogger.logger(server, config));
+    }
 
     return server;
 };

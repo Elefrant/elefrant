@@ -7,13 +7,6 @@ var bunyan = require('bunyan'),
 
 // Create logger funtion for audit the server
 var logger = function (server, config) {
-    // Check if not enable
-    if (!config.audit.enable) {
-        return function (req, res, next) {
-            next();
-        };
-    }
-
     // Create conecction
     var redisClient = require('./Redis.js')(config);
 

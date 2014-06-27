@@ -12,7 +12,7 @@ module.exports.authenticatePlugin = function (config) {
             scopesModel = req.route ? req.route.scopes : undefined;
 
         // Check if auth is enable and activate
-        if (!config.oauth.enable || !authModel) {
+        if (!authModel) {
             return next();
         }
 

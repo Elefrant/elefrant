@@ -359,11 +359,6 @@ module.exports = {
                         }
                     };
 
-                    // Set cache time
-                    res.cache('no-cache', {
-                        maxAge: 0
-                    });
-
                     res.send(result);
                     next();
                 }
