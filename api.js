@@ -6,11 +6,6 @@ var cluster = require('cluster'),
     datefmt = require('dateformat'),
     numCPUs = require('os').cpus().length;
 
-// Check if New relic is enable
-if (require('./app/lib/config').getConfigValue('newrelic', 'enable')) {
-    require('newrelic');
-}
-
 // Show master info
 console.log('[Cluster] Creating Master...');
 
