@@ -37,7 +37,7 @@ var usernameValidator = [
 var rolesValidator = [
     validate({
         validator: 'isIn',
-        arguments: ['user', 'developer', 'admin'],
+        arguments: [['user', 'developer', 'admin']],
         message: 'Role must be user, developer or admin'
     })
 ];
