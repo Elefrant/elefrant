@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
     mongoosePaginate = require('mongoose-paginate'),
     //mongoosastic = require('mongoosastic'),
-    validate = require('elefrant-mongoose-validator').validate,
+    validate = require('elefrant-mongoose-validator'),
     validatorSimple = require('validator'),
     Schema = mongoose.Schema,
     util = require('../lib/utils'),
@@ -14,6 +14,33 @@ var mongoose = require('mongoose'),
     // Plugins
     timestamps = require('mongoose-timestamp');
 require('mongoose-setter')(mongoose);
+
+
+
+// Validation
+
+var emailValidator = [
+    validate({
+        validator: 'isEmail',
+        message: 'Email address must be valid'
+    })
+];
+
+var usernameValidator = [
+    validate({
+        validator: 'isLength',
+        arguments: [3, 20],
+        message: 'Username should be between 3 and 20 characters'
+    })
+];
+
+var rolesValidator = [
+    validate({
+        validator: 'isIn',
+        arguments: ['user', 'developer', 'admin'],
+        message: 'Role must be user, developer or admin'
+    })
+];
 
 
 //User Schema
@@ -30,9 +57,7 @@ var UserSchema = new Schema({
         trim: true,
         unique: true,
         lowercase: true,
-        validate: [validate({
-            message: 'Email address must be valid'
-        }, 'isEmail')],
+        validate: emailValidator,
         //es_indexed: true
     },
     username: {
@@ -41,9 +66,7 @@ var UserSchema = new Schema({
         trim: true,
         unique: true,
         lowercase: true,
-        validate: [validate({
-            message: 'Username should be between 3 and 20 characters'
-        }, 'len', 3, 20)],
+        validate: usernameValidator,
         //es_boost: 2.0,
         //es_indexed: true
     },
@@ -61,9 +84,7 @@ var UserSchema = new Schema({
         trim: true,
         required: true,
         lowercase: true,
-        validate: [validate({
-            message: 'Role must be user, developer or admin'
-        }, 'isIn', ['user', 'developer', 'admin'])],
+        validate: rolesValidator,
         default: ['user']
     },
     settings: {

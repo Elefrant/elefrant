@@ -103,7 +103,8 @@ module.exports = function (config) {
 
     //Add validator middleware to server
     server.use(restifyValidator.validationPlugin({
-        errorsAsArray: false
+        errorsAsArray: false,
+        extendWithBody: true
     }));
 
     // Allow to audit every record
