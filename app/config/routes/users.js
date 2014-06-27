@@ -13,7 +13,8 @@
         'scopeItem',
         'scopeItem'
     ],
-    throttle: true, // Control rate limit
+    throttle: true, // Control rate limit. Optional
+    cache: 10, // Number of seconds to be in the cache. Optional
     action: api.v1.nameController.method
 },*/
 
@@ -44,6 +45,7 @@ module.exports = function (api, config) {
             ],
             //auth: true,
             throttle: true,
+            cache: 10,
             action: api.v1.userController.findAll
         },
         {

@@ -14,6 +14,7 @@
         'write'
     ],
     throttle: true, // Control rate limit
+    cache: 10, // Number of seconds to be in the cache. Optional
     action: api.v1.nameController.method
 },*/
 

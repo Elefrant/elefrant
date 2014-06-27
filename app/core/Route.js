@@ -48,6 +48,7 @@ module.exports = function (server, config) {
                 validation: route.action.validation || null, // Swagger doc and Validation
                 models: route.action.models || null, // Swagger doc
                 throttle: route.throttle || null, // Allow rate limit
+                cache: route.cache || null, // Allow rate limit
             }, route.action.action);
         }
     }

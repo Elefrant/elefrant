@@ -5,6 +5,13 @@
  */
 module.exports = {
     /*
+     * Enable
+     * --------------------------
+     * Enable throttle
+     */
+    enable: true,
+
+    /*
      * Global Throttle
      * --------------------------
      * True to enable for entired system, or false to define rate limit in each router
