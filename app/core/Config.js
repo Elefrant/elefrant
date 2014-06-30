@@ -12,12 +12,13 @@ module.exports = function () {
         config = {};
 
     // Check if not defined env variable
-    var env = process.env.NODE_ENV || 'development';
+    var env = process.env.NODE_ENV || 'development',
+        name = null;
 
     // Get common configuration
     utils.walkFile(config_path, null, function (path, filename) {
         // Get name normalized
-        var name = filename.substr(0, filename.lastIndexOf('.'));
+        name = filename.substr(0, filename.lastIndexOf('.'));
         name = name.charAt(0).toLowerCase() + name.slice(1);
 
         // Load configuration
@@ -25,15 +26,16 @@ module.exports = function () {
     });
 
     // Check if file exists
+    var envConfigAux = null;
     if (fs.existsSync(env_path + '/' + env)) {
         utils.walkFile(env_path + '/' + env, null, function (path, filename) {
             // Get name normalized
-            var name = filename.substr(0, filename.lastIndexOf('.'));
+            name = filename.substr(0, filename.lastIndexOf('.'));
             name = name.charAt(0).toLowerCase() + name.slice(1);
 
             // Check if property  exists
             if (config[name]) {
-                var envConfigAux = require(path);
+                envConfigAux = require(path);
 
                 // Merge only the values modificated
                 config[name] = _.extend(

@@ -35,7 +35,7 @@ module.exports = function (config, server) {
         res.cache('no-cache', {
             maxAge: cacheModel || config.cache.ttl
         });
-        next();
+        return next();
     });
 
 };

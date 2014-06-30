@@ -108,7 +108,7 @@ module.exports = function (config) {
     }));
 
     // Allow to audit every record
-    if (config.audit.enable) {
+    if (!config.audit.enable) {
         server.on('after', auditLogger.logger(server, config));
     }
 

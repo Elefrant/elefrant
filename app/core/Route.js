@@ -9,7 +9,9 @@ module.exports = function (server, config) {
 
     // Paths
     var routes_path = config.system.rootApp + '/config/routes',
-        routes = [];
+        routes = [],
+        route = null,
+        method = null;
 
     // Bootstrap routes
     _.walk(routes_path, null, function (path, filename) {
@@ -22,7 +24,7 @@ module.exports = function (server, config) {
     // Create each route
     for (var index in routes) {
         // Load route elements
-        var route = routes[index];
+        route = routes[index];
 
         // Show create routed
         if (config.system.debug) {
@@ -30,7 +32,7 @@ module.exports = function (server, config) {
         }
 
         // Load route
-        var method = route.method.toLowerCase();
+        method = route.method.toLowerCase();
 
         // Check if method delete
         if (method === 'delete') method = 'del';

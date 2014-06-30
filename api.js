@@ -6,9 +6,6 @@ var cluster = require('cluster'),
     datefmt = require('dateformat'),
     numCPUs = require('os').cpus().length;
 
-// Show master info
-console.log('[Cluster] Creating Master...');
-
 // Create a master server
 cluster.setupMaster({
     exec: 'server.js'
@@ -20,7 +17,6 @@ console.log('- Pid: %d'.grey, process.pid);
 console.log('- Time: %s'.grey, datefmt(new Date(), 'ddd, dd mmm yyyy hh:MM:ss Z'));
 
 // Fork workers
-console.error('[Cluster] Creating Workers...');
 for (var i = 0; i < numCPUs; i++) {
     cluster.fork();
 }

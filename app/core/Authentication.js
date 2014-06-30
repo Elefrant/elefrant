@@ -10,10 +10,10 @@ var mongoose = require('mongoose'), // Load mongodb handler
 
 module.exports = function (config) {
     // Connect to redis
-    var redisClient = require('./Redis.js')(config);
+    var redisClient = require('./Redis.js')(config),
 
-    // Check if exists expire time of token
-    var isExpireTime = config.oauth.tokenExpirationTime && config.oauth.tokenExpirationTime > 0;
+        // Check if exists expire time of token
+        isExpireTime = config.oauth.tokenExpirationTime && config.oauth.tokenExpirationTime > 0;
 
     // Functions and hooks
     return {

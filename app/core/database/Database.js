@@ -3,10 +3,10 @@
 module.exports = function (config, mongoose) {
 
     // Paths
-    var models_path = config.system.rootApp + '/models';
+    var models_path = config.system.rootApp + '/models',
 
-    // Connect to MongoDB
-    var mongodb_path = 'mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.database;
+        // Connect to MongoDB
+        mongodb_path = 'mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.database;
     mongoose.connect(mongodb_path);
     var db = mongoose.connection;
 
