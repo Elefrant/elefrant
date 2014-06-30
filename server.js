@@ -10,11 +10,6 @@ if (config.newrelic.enable) {
     require('newrelic');
 }
 
-/*if (process.env.NODE_ENV !== 'production' || process.env.NODE_ENV !== 'test') {
-    var heapdump = require('heapdump');
-    heapdump.writeSnapshot();
-}*/
-
 // Add logger to config object
 config.log = logger.logger(config);
 
