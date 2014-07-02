@@ -44,14 +44,12 @@ module.exports = {
      * @apiSuccessTitle (All) Success response
      * @apiSuccess (All) {String} name Name of service.
      * @apiSuccess (All) {String} version Version of service.
-     * @apiSuccess (All) {String} state State of api service.
      *
      * @apiSuccessExample Success-Response:
      *  HTTP/1.1 200 OK
      *  {
      *      "name": "Elefrant",
-     *      "version": "1.0.2",
-     *      "state": "Service is operating normally.",
+     *      "version": "1.0.2"
      *  }
      *
      */
@@ -60,8 +58,7 @@ module.exports = {
             // Get status values
             var status = {
                 name: require('../../../package.json').name,
-                version: require('../../../package.json').version,
-                state: 'Service is operating normally.'
+                version: require('../../../package.json').version
             };
 
             // Send status
