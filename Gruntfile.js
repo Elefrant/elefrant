@@ -127,7 +127,7 @@ module.exports = function (grunt) {
             server: {
                 options: {
                     index: 'api.js',
-                    logDir: 'logs'
+                    command: 'node --stack_size=8192 --max-old-space-size=8192'
                 }
             }
         },
