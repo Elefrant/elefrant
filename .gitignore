@@ -44,5 +44,5 @@ nbproject
 .bower-cache
 
 # ApiDoc
-apiDoc
-docs
+apiDoc/**/*
+
