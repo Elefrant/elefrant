@@ -6,7 +6,7 @@ module.exports = function (config, mongoose) {
     var models_path = config.system.rootApp + '/models',
 
         // Connect to MongoDB
-        auth = null;
+        auth = '';
     if (config.mongodb.user && config.mongodb.user !== '' && config.mongodb.password && config.mongodb.password !== '') {
         auth = config.mongodb.user + ':' + config.mongodb.password + '@';
     }
