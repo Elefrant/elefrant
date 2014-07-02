@@ -6,8 +6,14 @@ module.exports = function (config, mongoose) {
     var models_path = config.system.rootApp + '/models',
 
         // Connect to MongoDB
-        mongodb_path = 'mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.database;
-    mongoose.connect(mongodb_path);
+        auth = null;
+    if (config.mongodb.user && config.mongodb.user !== '' && config.mongodb.password && config.mongodb.password !== '') {
+        auth = config.mongodb.user + ':' + config.mongodb.password + '@';
+    }
+
+    var mongodb_path = 'mongodb://' + auth + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.database;
+
+    mongoose.connect(mongodb_path, config.mongodb.options);
     var db = mongoose.connection;
 
     // Show error in connection

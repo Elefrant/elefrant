@@ -23,5 +23,26 @@ module.exports = {
      * --------------------------
      * Name of database
      */
-    database: 'elefrant'
+    database: 'elefrant',
+
+    /*
+     * User
+     * --------------------------
+     * User of database
+     */
+    user: null,
+
+    /*
+     * Password
+     * --------------------------
+     * Password of database
+     */
+    password: null,
+
+    /*
+     * Options
+     * --------------------------
+     * Options of connection
+     */
+    options: null,
 };

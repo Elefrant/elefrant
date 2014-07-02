@@ -1,7 +1,8 @@
 'use strict';
 
 // Module dependencies.
-var RedisClient = require('redis');
+var RedisClient = require('redis'),
+    _ = require('underscore');
 
 module.exports = function (config) {
 
@@ -19,14 +20,13 @@ module.exports = function (config) {
     };
 
     // Redis connection
-    redis = RedisClient.createClient(config.redis.port, config.redis.host, config.redis.options);
+    var options = _.extend({
+            auth_pass: config.redis.password
+        },
+        config.redis.options
+    );
 
-    // Auth the connection
-    if (config.redis.password) {
-        redis.auth(config.redis.password, function (err) {
-            if (err) throw err;
-        });
-    }
+    redis = RedisClient.createClient(config.redis.port, config.redis.host, options);
 
     // Connect to a database
     if (config.redis.database) {
