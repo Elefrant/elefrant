@@ -1,7 +1,7 @@
 'use strict';
 
 // Module dependencies.
-var _ = require('../lib/utils');
+var _ = eRequire('app/lib/utils');
 
 module.exports = function (server, config) {
     // Load controllers

@@ -8,18 +8,18 @@ exports.config = {
     /**
      * Array of application names.
      */
-    app_name: [require('./app/lib/config').getConfigValue('server', 'name')],
+    app_name: [eConfig('server', 'name')],
     /**
      * Your New Relic license key.
      */
-    license_key: require('./app/lib/config').getConfigValue('newrelic', 'key'),
+    license_key: eConfig('newrelic', 'key'),
     logging: {
         /**
          * Level at which to log. 'trace' is most useful to New Relic when diagnosing
          * issues with the agent, 'info' and higher will impose the least overhead on
          * production applications.
          */
-        level: require('./app/lib/config').getConfigValue('newrelic', 'level'),
+        level: eConfig('newrelic', 'level'),
 
         /**
          * Dir to save log file

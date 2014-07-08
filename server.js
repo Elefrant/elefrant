@@ -1,9 +1,11 @@
 'use strict';
 
+// Init system
+require('./app/core/Initialize');
+
 // Module dependencies & initializing system variables.
-var mongoose = require('mongoose'), // Load mongodb handler
-    config = require('./app/core/Config')(), // Load config variables
-    logger = require('./app/core/Logger'); // Load logger config
+var config = eCore('Config')(), // Load config variables
+    logger = eCore('Logger'); // Load logger config
 
 // Check if New relic is enable
 if (config.newrelic.enable) {
@@ -14,13 +16,13 @@ if (config.newrelic.enable) {
 config.log = logger.logger(config);
 
 // Initialize database
-require('./app/core/database/Database')(config, mongoose);
+eCore('database/Database')(config);
 
 // Initialize server
-var server = require('./app/core/Server')(config);
+var server = eCore('Server')(config);
 
 // Initialize routing
-require('./app/core/Route')(server, config);
+eCore('Route')(server, config);
 
 // Start server
 server.listen(config.server.port, config.server.host, function onListening() {

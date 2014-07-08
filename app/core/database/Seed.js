@@ -2,9 +2,10 @@
 
 // Load cli library
 require('colors');
+require('../Initialize');
 
 // Load config file
-var config = require('../Config')(),
+var config = eCore('Config')(),
     mongoose = require('mongoose'),
     seeds_path = config.system.rootApp + '/config/database/seeds',
     seeds_models = {};
@@ -14,7 +15,7 @@ require('./Database')(config, mongoose);
 
 // Bootstrap seeds
 console.log('[Seeding] starting seeding with dummy data...'.blue);
-require('../../lib/utils').walk(seeds_path, null, function (path, filename) {
+eRequire('app/lib/utils').walk(seeds_path, null, function (path, filename) {
     // Get json, and get name
     var seeds = require(path),
         name = filename.substr(0, filename.lastIndexOf('.'));

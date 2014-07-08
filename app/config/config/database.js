@@ -5,6 +5,15 @@
  */
 module.exports = {
     /*
+     * Driver
+     * --------------------------
+     * Driver of database
+     * [mongo]: Mongodb instance
+     * [mysql]: Sequelize instance
+     */
+    driver: 'mongo',
+
+    /*
      * Host
      * --------------------------
      * Host of database

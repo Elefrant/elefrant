@@ -1,7 +1,7 @@
 'use strict';
 
 // Module dependencies.
-var codes = require('../config/codes');
+var codes = eRequire('app/config/codes');
 
 // Export response format
 module.exports = {

@@ -3,7 +3,7 @@
 // Module dependencies.
 var fs = require('fs'),
     _ = require('lodash'),
-    utils = require('../lib/utils');
+    utils = eRequire('app/lib/utils');
 
 module.exports = function () {
     // Paths

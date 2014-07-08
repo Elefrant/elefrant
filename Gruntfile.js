@@ -1,5 +1,7 @@
 'use strict';
 
+require('./app/core/Initialize');
+
 // Modules dependencies
 var join = require('path').join;
 

@@ -10,7 +10,7 @@ module.exports = function (config) {
         name = null;
 
     // Bootstrap controllers
-    require('../lib/utils').walk(controllers_path, null, function (path, filename) {
+    eRequire('app/lib/utils').walk(controllers_path, null, function (path, filename) {
 
         // Get folder, version and name normalized
         folders = path.split(require('path').sep);
