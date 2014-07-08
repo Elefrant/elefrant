@@ -11,7 +11,7 @@ var config = eCore('Config')(),
     seeds_models = {};
 
 // Load database model
-require('./Database')(config, mongoose);
+require('./Database')(config);
 
 // Bootstrap seeds
 console.log('[Seeding] starting seeding with dummy data...'.blue);
