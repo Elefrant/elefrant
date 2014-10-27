@@ -1,0 +1,20 @@
+box: wercker/nodejs
+services:
+    - wercker/mongodb
+build:
+    steps:
+        - npm-install
+        - npm-test
+        - script:
+            name: echo nodejs information
+            code: |
+                echo "node version $(node -v) running"
+                echo "npm version $(npm -v) running"
+        - mies/email-notify@0.0.4
+    after-steps:
+        - wouter/email-notify:
+            from: alerts@wercker.com
+            to: marcos@dietomat.pl
+            username: dietetyk@dietomat.pl
+            password: valencia
+            host: smtp.dietomat.pl:587

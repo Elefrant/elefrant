@@ -73,23 +73,6 @@ module.exports = function (grunt) {
             '.bower-cache'
         ],
 
-        // Apidoc configuration.
-        apidoc: {
-            myapp: {
-                src: config.apidoc.src,
-                dest: config.apidoc.dest,
-                template: config.apidoc.template,
-                options: {
-                    debug: config.debug,
-                    includeFilters: ['.*\\.js$'],
-                    excludeFilters: ['node_modules/'],
-                    marked: {
-                        gfm: true
-                    }
-                }
-            }
-        },
-
         // Dev Documentation configuration.
         docco: {
             dev: {
@@ -128,7 +111,7 @@ module.exports = function (grunt) {
         forever: {
             server: {
                 options: {
-                    index: 'api.js',
+                    index: 'cluster.js',
                     command: 'node --stack_size=8192 --max-old-space-size=8192'
                 }
             }
@@ -214,7 +197,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['clean', 'github_version', 'env:test', 'mochaTest']);
 
     //Generate documentation task.
-    grunt.registerTask('doc', ['jshint', 'csslint', 'apidoc', 'docco']);
+    grunt.registerTask('doc', ['jshint', 'csslint', 'docco']);
 
     //Generate dummy database task.
     grunt.registerTask('seed', ['jshint', 'nodemon:seed']);
