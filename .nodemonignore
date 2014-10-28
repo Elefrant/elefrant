@@ -1,0 +1,5 @@
+www
+views/layout.ejs
+.tmp
+.git
+assets
