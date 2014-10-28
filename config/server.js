@@ -79,6 +79,11 @@ module.exports = {
 	// Supports checking the query string for callback or jsonp and ensuring that the content-type is appropriately set if JSONP params are in place.
 	jsonp: true,
 
+
+	bodyParser: {
+		mapParams: false
+	},
+
 	/*
 	 * Acceptable
 	 * --------------------------
@@ -89,5 +94,5 @@ module.exports = {
 		'text/plain',
 		'application/octet-stream',
 		'application/javascript'
-	],
+	]
 };

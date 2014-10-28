@@ -1,13 +1,13 @@
 'use strict';
 
 /**
- * Audit Logger configuration properties
+ * Help Config File
  */
 module.exports = {
     /*
-     * Enable Audit
+     * Title
      * --------------------------
-     * Enable Audit Logger
+     * Description
      */
     help: false
 };

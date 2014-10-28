@@ -1,20 +1,14 @@
 'use strict';
 
 /*{
-    name: 'nameforroute',
+    name: 'nameforroute', (optional)
     path: 'url/of/the/route',
-    method: 'GET or POST or PUT or DELETE or PATCH', ['get', 'post', 'put', 'del', 'patch', 'head', 'options']
-    version: [
+    method: 'GET or POST or PUT or DELETE or PATCH or HEAD or OPTIONS', (optional, default GET method)
+    version: [ (optional, default current version)
         '1.0.0',
         '2.0.1'
     ],
-    auth: true or false, // Optional
-    scopes: [ // Optional
-        'read',
-        'write'
-    ],
-    throttle: true, // Control rate limit
-    cache: 10, // Number of seconds to be in the cache. Optional
+    ...componentsAction: values...., // Components options
     action: 'controller.version.method'
 },*/
 
