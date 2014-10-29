@@ -1,20 +1,19 @@
 'use strict';
 
-// Module dependencies.
-require('colors');
 var cluster = require('cluster'),
-    datefmt = require('dateformat'),
-    numCPUs = require('os').cpus().length;
+        datefmt = require('dateformat'),
+        util = require('elefrant-util'),
+        chalk = util.chalk,
+        numCPUs = require('os').cpus().length;
 
-// Create a master server
 cluster.setupMaster({
     exec: 'server.js'
 });
 
 //Show master info in console
-console.log('[Cluster] Master created'.green);
-console.log('- Pid: %d'.grey, process.pid);
-console.log('- Time: %s'.grey, datefmt(new Date(), 'ddd, dd mmm yyyy hh:MM:ss Z'));
+console.log(chalk.green('INFO:'), ' Cluster master created');
+console.log('    Pid: %d', process.pid);
+console.log('    Time: %s', datefmt(new Date(), 'ddd, dd mmm yyyy hh:MM:ss Z'));
 
 // Fork workers
 for (var i = 0; i < numCPUs; i++) {
@@ -23,12 +22,12 @@ for (var i = 0; i < numCPUs; i++) {
 
 // Event when listening worker
 cluster.on('listening', function (worker, address) {
-    console.log('[Cluster] A worker is now connected to %s:%d'.green, address.address, address.port);
+    console.log(chalk.green('INFO:') + ' The worker #%s is now connected to %s:%d', worker.id, address.address, address.port);
 });
 
 // Event when exit worker
 cluster.on('exit', function (worker, code, signal) {
-    console.log('[Cluster] worker %d died (%s). restarting...'.red, worker.process.pid, signal || code);
+    console.log(chalk.red('ERROR:') + ' Worker %d died (%s). restarting...', worker.process.pid, signal || code);
 
     // Auto-restart worker
     cluster.fork();
@@ -36,10 +35,10 @@ cluster.on('exit', function (worker, code, signal) {
 
 // Event when disconnect worker
 cluster.on('disconnect', function (worker) {
-    console.log('[Cluster] The worker #%s has disconnected'.yellow, worker.id);
+    console.log(chalk.yellow('WARN:') + ' The worker #%s has disconnected', worker.id);
 });
 
 // Event when death worker
 cluster.on('death', function (worker) {
-    console.log('[Cluster] The worker #%s is death'.red, worker.id);
+    console.log(chalk.red('ERROR:') + ' The worker #%s is death', worker.id);
 });

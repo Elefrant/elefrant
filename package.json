@@ -29,7 +29,9 @@
 	},
 	"dependencies": {
 		"elefrantio": "~0.2.0",
-		"sails-disk": "~0.10.3"
+		"sails-disk": "~0.10.3",
+		"dateformat": "~1.0.8",
+		"elefrant-util": "~0.2.0"
 	},
 	"devDependencies": {
 		"grunt-cli": "~0.1.13",
