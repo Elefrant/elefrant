@@ -84,6 +84,9 @@ module.exports = {
 		mapParams: false
 	},
 
+	// Returns a plugin that will parse the HTTP request body IFF the contentType is application/x-www-form-urlencoded.
+	urlEncodedBodyParser: true,
+
 	/*
 	 * Acceptable
 	 * --------------------------

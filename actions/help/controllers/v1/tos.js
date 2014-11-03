@@ -13,7 +13,7 @@ module.exports.v1 = function (config) {
 				};
 
 				// Send status
-				res.send(status);
+				res.json(status);
 				next();
 			}
 		},
@@ -28,7 +28,7 @@ module.exports.v1 = function (config) {
 				};
 
 				// Send tos
-				res.send(tos);
+				res.json(tos);
 				next();
 			}
 		}

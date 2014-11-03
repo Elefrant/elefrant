@@ -16,6 +16,7 @@
 module.exports = [{
 	path: '/',
 	method: 'GET',
+	oauth: false,
 	version: [
 		'1.0.0'
 	],
