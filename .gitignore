@@ -21,7 +21,8 @@ build/Release
 
 # Dependency directory
 node_modules
-components/**/node_modules/
+#components/**/node_modules/
+components
 
 # Mac file & Files
 .DS_Store
