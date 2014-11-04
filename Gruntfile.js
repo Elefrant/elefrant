@@ -100,7 +100,7 @@ module.exports = function (grunt) {
                 ignoreLeaks: false,
                 reporter: 'spec'
             },
-            src: ['test/**/*.js']
+            src: ['test/**/*.js', 'actions/**/test/**/*.js']
         },
 
         notify: {
