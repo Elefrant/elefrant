@@ -24,7 +24,6 @@ module.exports = function (grunt) {
                 files: [
                     '*.js',
                     'actions/**/*.js',
-                    'components/**/*.js',
                     'config/**/*.js'
                 ],
                 tasks: ['jshint'],
