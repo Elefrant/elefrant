@@ -1,5 +1,5 @@
 {
 	"dependencies": {
-		"elefrant-logger": "latest",
+		"elefrant-etag": "latest"
 	}
 }

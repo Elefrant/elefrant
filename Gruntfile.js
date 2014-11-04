@@ -1,44 +1,32 @@
 'use strict';
 
-require('./app/core/Initialize');
-
-// Modules dependencies
-var join = require('path').join;
-
-// Path for files
-var paths = {
-    js: [
-        '*.js',
-        'app/**/*.js',
-        'test/**/*.js',
-        'templates/docs/basic/js/*.js'
-    ],
-    css: [
-        'templates/docs/basic/css/*.css'
-    ]
-};
+var path = require('path'),
+        config  = require('./node_modules/elefrantio/lib/config');
 
 module.exports = function (grunt) {
-    // Load config
-    var config = require('./app/core/Config')();
+    var options = {
+        configPath: path.join(__dirname, 'config'),
+        actionPath: path.join(__dirname, 'actions')
+    };
+    var conf = config(options),
+            pkg = grunt.file.readJSON('package.json'),
+            env = process.env.NODE_ENV || conf.env;
 
-    // Show time of executed tasks
-    if (config.env !== 'production') {
+    if (env !== 'production') {
         require('time-grunt')(grunt);
     }
-
-    var pkg = grunt.file.readJSON('package.json');
-
-    // Create folders
-    grunt.file.mkdir(join(config.system.root, 'logs'));
 
     grunt.initConfig({
         pkg: pkg,
 
-        // Watch changes in files
         watch: {
             js: {
-                files: paths.js,
+                files: [
+                    '*.js',
+                    'actions/**/*.js',
+                    'components/**/*.js',
+                    'config/**/*.js'
+                ],
                 tasks: ['jshint'],
                 options: {
                     livereload: true
@@ -46,58 +34,21 @@ module.exports = function (grunt) {
             }
         },
 
-        // Check js syntax and validate
         jshint: {
-            all: {
-                src: paths.js,
-                options: {
-                    jshintrc: true
-                }
-            }
-        },
-
-        // Check css syntax and validate
-        csslint: {
             options: {
-                csslintrc: '.csslintrc'
+                jshintrc: true
             },
-            all: {
-                src: paths.css
-            }
+            src: [
+                '*.js',
+                'actions/**/*.js',
+                'config/**/*.js'
+            ]
         },
 
-        // Clean logs and tmp files
         clean: [
-            'logs/**/*',
-            '.bower-registry',
-            '.bower-cache'
+            '.tmp'
         ],
 
-        // Dev Documentation configuration.
-        docco: {
-            dev: {
-                src: [
-                    'app/core/**/*.js',
-                    'app/lib/**/*.js'
-                ],
-                options: {
-                    dest: 'docs/'
-                }
-            }
-        },
-
-        // Check version of elefrant
-        github_version: {
-            all: {
-                options: {
-                    username: 'Elefrant',
-                    repository: 'elefrant',
-                    version: pkg.elefrant
-                }
-            }
-        },
-
-        // Set a default enviroment
         env: {
             test: {
                 NODE_ENV: 'test'
@@ -107,7 +58,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // Init system
         forever: {
             server: {
                 options: {
@@ -117,7 +67,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // Init system
         nodemon: {
             dev: {
                 script: 'server.js',
@@ -128,78 +77,50 @@ module.exports = function (grunt) {
                     nodeArgs: ['--debug'],
                     delayTime: 1,
                     env: {
-                        PORT: config.server.port
+                        PORT: conf.server.port
                     },
                     cwd: __dirname
                 }
-            },
-            seed: {
-                script: 'app/core/database/Seed.js',
             }
         },
 
-        // Concurrent tasks
         concurrent: {
             dev: {
-                tasks: ['nodemon:dev', 'watch'],
-                options: {
-                    logConcurrentOutput: true
-                }
-            },
-            prod: {
-                tasks: ['forever:server:restart', 'watch'],
+                tasks: ['nodemon', 'watch'],
                 options: {
                     logConcurrentOutput: true
                 }
             }
         },
 
-        // Mocha test
         mochaTest: {
             options: {
-                reporter: 'spec',
-                require: 'server.js'
+                require: ['should'],
+                timeout: 3000,
+                ignoreLeaks: false,
+                reporter: 'spec'
             },
-            src: ['test/mocha/**/*.js']
+            src: ['test/**/*.js', 'actions/**/test/**/*.js']
         },
 
-        // Show notifications
         notify: {
-            watch: {
-                options: {
-                    title: 'Task Complete', // optional
-                    message: 'Uglify finished running', //required
-                }
-            },
             server: {
                 options: {
                     message: 'Server is ready!'
                 }
             }
         }
+    });
 
-    }); // grunt.initConfig
-
-    //Load NPM tasks
     require('load-grunt-tasks')(grunt);
 
-    //Default task(s).
-    if (process.env.NODE_ENV === 'production') {
-        grunt.registerTask('default', ['clean', 'github_version', 'concurrent:prod']);
+    if (env === 'production') {
+        grunt.registerTask('default', ['clean', 'forever:server:restart']);
     } else {
-        grunt.registerTask('default', ['clean', 'github_version', 'jshint', 'csslint', 'concurrent:dev']);
+        grunt.registerTask('default', ['clean', 'jshint', 'concurrent', 'notify:server']);
     }
 
-    // Production task
-    grunt.registerTask('production', ['clean', 'github_version', 'env:prod', 'concurrent:prod']);
+    grunt.registerTask('prod', ['clean', 'env:prod', 'forever:server:restart']);
 
-    //Test task.
-    grunt.registerTask('test', ['clean', 'github_version', 'env:test', 'mochaTest']);
-
-    //Generate documentation task.
-    grunt.registerTask('doc', ['jshint', 'csslint', 'docco']);
-
-    //Generate dummy database task.
-    grunt.registerTask('seed', ['jshint', 'nodemon:seed']);
-
+    grunt.registerTask('test', ['clean', 'env:test', 'mochaTest']);
 };

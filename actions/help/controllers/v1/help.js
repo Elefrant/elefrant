@@ -32,5 +32,5 @@ module.exports.v1 = function (config) {
 				next();
 			}
 		}
-	}
+	};
 };
