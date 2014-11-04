@@ -1,17 +1,8 @@
 'use strict';
 
-/**
- * Help Model
- */
-var Help = {
+
+module.exports = {
 	attributes: {
-		provider: {
-			type: 'alphanumericdashed'
-		},
-		identifier: {
-			type: 'string'
-		}
+
 	}
 };
-
-module.exports = Help;

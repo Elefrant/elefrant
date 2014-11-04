@@ -1,20 +1,17 @@
 box: wercker/nodejs
-services:
-    - wercker/mongodb
+# Build definition
 build:
-    steps:
-        - npm-install
-        - npm-test
-        - script:
-            name: echo nodejs information
-            code: |
-                echo "node version $(node -v) running"
-                echo "npm version $(npm -v) running"
-        - mies/email-notify@0.0.4
-    after-steps:
-        - wouter/email-notify:
-            from: alerts@wercker.com
-            to: marcos@dietomat.pl
-            username: dietetyk@dietomat.pl
-            password: valencia
-            host: smtp.dietomat.pl:587
+  # The steps that will be executed on build
+  steps:
+    # A step that executes `npm install` command
+    - npm-install
+    # A step that executes `npm test` command
+    - npm-test
+
+    # A custom script step, name value is used in the UI
+    # and the code value contains the command that get executed
+    - script:
+        name: echo nodejs information
+        code: |
+          echo "node version $(node -v) running"
+          echo "npm version $(npm -v) running"

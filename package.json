@@ -20,7 +20,8 @@
 		"Server"
 	],
 	"scripts": {
-		"test": "node node_modules/grunt-cli/bin/grunt"
+		"test": "node node_modules/grunt-cli/bin/grunt test",
+		"postinstall": "node node_modules/elefrantio/bin/elefrant postinstall"
 	},
 	"engines": {
 		"node": ">=0.10.0",
@@ -28,15 +29,23 @@
 		"elefrant": "0.2.x"
 	},
 	"dependencies": {
+		"grunt-env": "^0.4.2",
+		"grunt-contrib-clean": "^0.6.0",
+		"grunt-contrib-jshint": "^0.10.0",
+		"grunt-forever": "^0.4.5",
+		"load-grunt-tasks": "~1.0.0",
 		"elefrantio": "~0.2.0",
 		"sails-disk": "~0.10.3",
-		"dateformat": "~1.0.8",
 		"elefrant-util": "~0.2.0"
 	},
 	"devDependencies": {
 		"grunt-cli": "~0.1.13",
-		"grunt-contrib-jshint": "~0.10.0",
+		"grunt-notify": "~0.3.1",
 		"grunt-mocha-test": "~0.10.0",
+		"grunt-nodemon": "~0.3.0",
+		"grunt-concurrent": "^1.0.0",
+		"grunt-contrib-watch": "^0.6.1",
+		"time-grunt": "~1.0.0",
 		"grunt": "~0.4.0",
 		"mocha": "~1.18.2",
 		"should": "~3.2.0"
