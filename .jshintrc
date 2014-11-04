@@ -22,9 +22,6 @@
     "predef": [ // Extra globals.
         "define",
         "require",
-        "eRequire",
-        "eConfig",
-        "eCore",
         "exports",
         "module",
         "describe",
