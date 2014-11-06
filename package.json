@@ -1,6 +1,6 @@
 {
 	"name": "elefranti",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "Elefrant: A javascript platform to create api servers.",
 	"license": "MIT",
 	"repository": {
@@ -34,7 +34,7 @@
 		"grunt-contrib-jshint": "^0.10.0",
 		"grunt-forever": "^0.4.5",
 		"load-grunt-tasks": "~1.0.0",
-		"elefrantio": "~0.2.0",
+		"elefrantio": "~0.2.2",
 		"sails-disk": "~0.10.3",
 		"elefrant-util": "~0.2.0",
 		"dateformat": "~1.0.8"
