@@ -13,5 +13,10 @@ module.exports = {
     //
     // (defaults to localDiskDb)
     migrate: 'safe',
-    connection: 'localDiskDb'
+    
+    // Connection by default
+    connection: 'localDiskDb',
+    
+    // Strict data to schema
+    schema: true
 };
