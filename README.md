@@ -123,7 +123,7 @@ To maintain your own public or private repository, add your repository as remote
 
 ## Credits
 
-  * To our awesome <a href="https://github.com/orgs/Elefrant/teams/mean">core team</a> with help of our <a href="https://github.com/Elefrant/elefrant/graphs/contributors">contributors</a> which have made this project a success.
+  * To our awesome <a href="https://github.com/orgs/Elefrant/teams">core team</a> with help of our <a href="https://github.com/Elefrant/elefrant/graphs/contributors">contributors</a> which have made this project a success.
 
 
 ## License
