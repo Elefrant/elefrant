@@ -1,10 +1,11 @@
 'use strict';
 
 var cluster = require('cluster'),
-        datefmt = require('dateformat'),
-        util = require('elefrant-util'),
-        chalk = util.chalk,
-        numCPUs = require('os').cpus().length;
+    datefmt = require('dateformat'),
+    util = require('elefrant-util'),
+    Q = util.q,
+    chalk = util.chalk,
+    numCPUs = require('os').cpus().length;
 
 cluster.setupMaster({
     exec: 'server.js'
@@ -15,10 +16,29 @@ console.log(chalk.green('INFO:'), ' Cluster master created');
 console.log('    Pid: %d', process.pid);
 console.log('    Time: %s', datefmt(new Date(), 'ddd, dd mmm yyyy hh:MM:ss Z'));
 
-// Fork workers
-for (var i = 0; i < numCPUs; i++) {
-    cluster.fork();
+// Function to promises fork
+function promiseCluster(condition, body) {
+    var done = Q.defer();
+
+    function loop() {
+        if (!condition()) return done.resolve();
+        Q.when(body(), loop, done.reject);
+    }
+
+    Q.nextTick(loop);
+
+    return done.promise;
 }
+
+// Fork workers
+var index = 0;
+promiseCluster(function () {
+    return index < numCPUs;
+}, function () {
+    cluster.fork();
+    index++;
+    return Q.delay(1000); // arbitrary async
+}).done();
 
 // Event when listening worker
 cluster.on('listening', function (worker, address) {
