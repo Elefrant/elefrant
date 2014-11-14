@@ -36,7 +36,7 @@
 		"load-grunt-tasks": "~1.0.0",
 		"elefrantio": "~0.2.2",
 		"sails-disk": "~0.10.3",
-		"elefrant-util": "~0.2.0",
+		"elefrant-util": "~0.2.1",
 		"dateformat": "~1.0.8"
 	},
 	"devDependencies": {
