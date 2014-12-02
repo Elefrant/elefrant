@@ -1,10 +1,10 @@
 'use strict';
 
 var cluster = require('cluster'),
-    datefmt = require('dateformat'),
     util = require('elefrant-util'),
     Q = util.q,
     chalk = util.chalk,
+    datefmt = util.dateformat,
     numCPUs = require('os').cpus().length;
 
 cluster.setupMaster({
