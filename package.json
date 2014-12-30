@@ -34,7 +34,7 @@
 		"grunt-contrib-jshint": "^0.10.0",
 		"grunt-forever": "^0.4.5",
 		"load-grunt-tasks": "~1.0.0",
-		"elefrantio": "~0.2.2",
+		"elefrantio": "~0.2.3",
 		"sails-disk": "~0.10.3",
 		"elefrant-util": "~0.2.2"
 	},
